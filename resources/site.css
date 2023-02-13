@@ -17,7 +17,7 @@ body {
   padding: 0;
 }
 
-main, footer {
+main {
   padding: 2em;
 }
 
@@ -59,16 +59,29 @@ header, #side-nav {
 }
 
 #side-nav {
-  display: flex;
-  justify-content: space-around;
   height: 100%;
   position: absolute;
 }
 
+nav {
+  display: flex;
+  flex-flow: column wrap;
+  height: 100%;
+  justify-content: space-evenly;
+}
+
 nav ul {
-  width: 100px;
-  margin: auto;
-  margin-top: 5em;
+  align-content: flex-start;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+nav li {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 2.5em;
+  margin-right: 2.5em;
 }
 
 a {
@@ -82,4 +95,10 @@ a:visited {
 
 a:hover {
   color: #e29e37
+}
+
+footer {
+  align-self: flex-end;
+  display: flex;
+  padding: 1.5em;
 }
