@@ -11,8 +11,12 @@
   <link rel="stylesheet" href="site.css">
   <script>
     const toggleNav = function() {
-      let links = document.getElementById("side-nav")
-      links.style.display === "block" ? links.style.display = "none" : links.style.display = "block"
+      const nav = document.getElementById("side-nav")
+      const shade = document.getElementById("shade")
+
+      const display = nav.style.display === "block" ? "none" : "block";
+      nav.style.display = display;
+      shade.style.display = display;
   }
   </script>
 </head>
