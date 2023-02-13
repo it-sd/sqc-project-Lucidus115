@@ -1,6 +1,7 @@
 :root {
   --bg-color: #111;
   --text-color: #fefefe;
+  --nav-color: #333;
 }
 
 html {
@@ -20,24 +21,53 @@ main, footer {
   padding: 2em;
 }
 
-header {
+.top-nav a, nav a {
+  text-decoration: none;
+}
+
+.top-nav > ul, nav > ul {
+  list-style-type: none;
+}
+
+.top-nav {
   align-items: stretch;
-  background-color: #333;
+  background-color: var(--nav-color);
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-end;
 }
 
-nav > ul {
+.top-nav > ul {
   display: flex;
-  list-style-type: none;
   margin: 0;
 }
 
-header a {
+.top-nav a {
   display: block;
   padding: 1em;
-  text-decoration: none;
+}
+
+header {
+  background-color: var(--nav-color);
+  height: 100%;
+  position: absolute;
+}
+
+#nav-icon {
+  display: block;
+  left: 1em;
+  position: absolute;
+  z-index: 10;
+}
+
+nav {
+  display: flex;
+  justify-content: space-around;
+}
+
+nav ul {
+  width: 100px;
+  margin: auto;
 }
 
 a {
