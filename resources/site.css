@@ -1,0 +1,54 @@
+:root {
+  --bg-color: #111;
+  --text-color: #fefefe;
+}
+
+html {
+  color: var(--text-color);
+  background-color: var(--bg-color); 
+}
+
+body {
+  display: flex;
+  font-family: Arial, Helvetica, sans-serif;
+  flex-flow: column wrap;
+  margin: 0;
+  padding: 0;
+}
+
+main, footer {
+  padding: 2em;
+}
+
+header {
+  align-items: stretch;
+  background-color: #333;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+}
+
+nav > ul {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+}
+
+header a {
+  display: block;
+  padding: 1em;
+  text-decoration: none;
+}
+
+a {
+  color: var(--text-color);
+}
+
+a:visited {
+  color: var(--text-color);
+}
+
+
+a:hover {
+  color: #e29e37
+}
