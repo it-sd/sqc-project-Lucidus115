@@ -21,15 +21,15 @@ main, footer {
   padding: 2em;
 }
 
-.top-nav a, nav a {
+#top-nav a, nav a {
   text-decoration: none;
 }
 
-.top-nav > ul, nav > ul {
+#top-nav > ul, nav > ul {
   list-style-type: none;
 }
 
-.top-nav {
+#top-nav {
   align-items: stretch;
   background-color: var(--nav-color);
   display: flex;
@@ -37,20 +37,18 @@ main, footer {
   justify-content: flex-end;
 }
 
-.top-nav > ul {
+#top-nav > ul {
   display: flex;
   margin: 0;
 }
 
-.top-nav a {
+#top-nav a {
   display: block;
   padding: 1em;
 }
 
-header {
+header, #side-nav {
   background-color: var(--nav-color);
-  height: 100%;
-  position: absolute;
 }
 
 #nav-icon {
@@ -60,14 +58,17 @@ header {
   z-index: 10;
 }
 
-nav {
+#side-nav {
   display: flex;
   justify-content: space-around;
+  height: 100%;
+  position: absolute;
 }
 
 nav ul {
   width: 100px;
   margin: auto;
+  margin-top: 5em;
 }
 
 a {
