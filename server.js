@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const assert = require('node:assert/strict')
+const assert = require('assert')
 const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 5163
