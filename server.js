@@ -40,7 +40,7 @@ const runHealthQuery = async function () {
 
   // Query failed
   if (testUser === undefined) {
-    status = 500;
+    status = 500
     msg = 'Failed to query for `TestUser`'
   }
 
@@ -58,7 +58,7 @@ const runGatherUsersQuery = async function () {
 
   // Query failed
   if (results === undefined) {
-    status = 500;
+    status = 500
     msg = 'Failed to query for all accounts'
   }
 
@@ -71,11 +71,11 @@ const main = function () {
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
     .get('/health', async function (_req, res) {
-      const result = await runHealthQuery();
+      const result = await runHealthQuery()
       res.status(result.status).send(result.msg)
     })
     .get('/', async function (_req, res) {
-      const result = await runGatherUsersQuery();
+      const result = await runGatherUsersQuery()
 
       res.render('index', { accounts: result.results })
     })
