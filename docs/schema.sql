@@ -7,7 +7,7 @@ CREATE TABLE user {
   password VarChar(MAX) NOT NULL,
   email VarChar(254) NOT NULL,
   registered_date Timestamp NOT NULL,
-  projects INT[] NOT NULL
+  projects INT[]
 }
 
 CREATE TABLE project {
@@ -18,3 +18,6 @@ CREATE TABLE project {
   sound_data VarChar(MAX) NOT NULL,
   user_id INT NOT NULL
 }
+
+INSERT INTO user (username, password, email, registered_date, projects) VALUES
+  ('TestUser', 'password', 'notareal@email.bruh', 2023-02-20 12:12:12);
