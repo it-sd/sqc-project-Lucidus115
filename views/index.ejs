@@ -5,10 +5,16 @@
 
     <%_ for (const account of accounts) { _%>
       <h2><%= account.username %></h2>
-      <span><%= account.registered_date %></span>
+      <span>Registered on: <%= account.registered_date %></span>
 
       <h3>Projects</h3>
-      <p><%= account.projects %></p>
+
+
+      <% if(account.projects !== null){ %>
+        <p><%= account.projects %></p>
+      <% } else{ %>  
+          <p>No projects created</p>
+      <% } %>
     <%_ } _%>
   </main>
 <%- include('footer'); -%>

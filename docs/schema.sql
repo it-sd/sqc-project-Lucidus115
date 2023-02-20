@@ -21,23 +21,26 @@ CREATE TABLE project (
   user_id INT NOT NULL
 );
 
-INSERT INTO user_account (username, password, email, registered_date)
+INSERT INTO user_account (username, password, email, registered_date, projects)
   VALUES
   (
     'TestUser', 
     'password', 
     'notareal@email.bruh', 
-    '2023-02-20 0:0:0+02'
+    '2023-02-20 0:0:0+02',
+    NULL
   ),
   (
     'Autumn', 
     'thiswillbeencryptedl8r', 
     'alsonotareal@email.bruh', 
-    '2023-02-20 12:34:56+02'
+    '2023-02-20 12:34:56+02',
+    NULL
   ),  
   (
     'Aieee!!', 
     'qwerty', 
     'againnotareal@email.bruh', 
-    '2023-02-22 05:06:07-04'
+    '2023-02-22 05:06:07-04',
+    array[0, 1, 2]
   );

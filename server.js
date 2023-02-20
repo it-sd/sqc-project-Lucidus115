@@ -48,7 +48,7 @@ const runHealthQuery = async function () {
 }
 
 const runGatherUsersQuery = async function () {
-  const sql = `SELECT id, username, registered_date
+  const sql = `SELECT id, username, registered_date, projects
   FROM user_account;`
 
   const results = await query(sql)
