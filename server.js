@@ -34,7 +34,7 @@ express()
   .set('view engine', 'ejs')
   .get('/health', async function (_req, res) {
     const sql = `SELECT id, username, registered_date
-      FROM user
+      FROM user_account
       LIMIT 1;`
     
     const testUser = await query(sql)
