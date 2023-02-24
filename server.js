@@ -82,6 +82,9 @@ const main = function () {
     .get('/about', function (_req, res) {
       res.render('about')
     })
+    .get('/audio-new', function (_req, res) {
+      res.render('audio-new')
+    })
     .listen(PORT, () => console.log(`Listening on ${PORT}`))
 }
 
