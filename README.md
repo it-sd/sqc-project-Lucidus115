@@ -8,3 +8,5 @@ AudialCat Studio is a web-based music maker application. You can browse [Freesou
 
 ## Entity-Relationship Diagram
 ![entity relationship diagram](docs/er-diagram.png)
+
+4. Hello from mdelcastillo!
