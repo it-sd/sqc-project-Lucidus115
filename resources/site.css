@@ -1,5 +1,6 @@
 :root {
   --bg-color: #111;
+  --alt-color: #2b2b2b;
   --text-color: #fefefe;
   --nav-color: rgb(81, 21, 150);
 }
@@ -111,4 +112,20 @@ footer {
   align-self: flex-end;
   display: flex;
   padding: 1.5em;
+}
+
+main {
+  display: flex;
+}
+
+#timeline {
+  border: 1px solid var(--text-color);
+  min-height: 85%;
+  min-width: 75%;
+  right: 5%;
+  position: absolute;
+}
+
+#sound-list {
+  min-height: 100%;
 }
