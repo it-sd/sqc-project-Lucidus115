@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const assert = require('assert')
 const express = require('express')
+const freesound = require('freesound')
 const path = require('path')
 const PORT = process.env.PORT || 5163
 const { Pool } = require('pg')
@@ -66,6 +67,9 @@ const runGatherUsersQuery = async function () {
 }
 
 const main = function () {
+  freesound.apiKey = process.env.FREESOUND_KEY
+  console.log(process.env.FREESOUND_KEY)
+
   express()
     .use(express.static(path.join(__dirname, 'resources')))
     .set('views', path.join(__dirname, 'views'))
