@@ -15,11 +15,22 @@
     </div>
   </main>
   <script>
-    
+  
+const baseUrl = 'http://localhost:5163'
 const btn = document.getElementById('rand-sound')
 
-const retrieveSound = function () {
-  console.log("Epiccc")
+const retrieveSound = async function () {
+  const soundId = Math.round(Math.random() * 10000)
+  const url = new URL('/audio-search', baseUrl)
+  const res = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify({ soundId: soundId }),
+    headers: { 'Content-Type': 'application/json' }
+  })
+
+  const result = await res.json();
+  const audio = new Audio(result.sound)
+  audio.play()
 }
 
 btn.addEventListener('click', (e) => retrieveSound())

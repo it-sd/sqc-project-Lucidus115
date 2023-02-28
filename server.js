@@ -67,11 +67,11 @@ const runGatherUsersQuery = async function () {
 }
 
 const main = function () {
-  freesound.apiKey = process.env.FREESOUND_KEY
-  console.log(process.env.FREESOUND_KEY)
-
+  freesound.setToken(process.env.FREESOUND_KEY)
+  
   express()
     .use(express.static(path.join(__dirname, 'resources')))
+    .use(express.json())
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
     .get('/health', async function (_req, res) {
@@ -88,6 +88,17 @@ const main = function () {
     })
     .get('/audio-new', function (_req, res) {
       res.render('audio-new')
+    })
+    .post('/audio-search', async function (req, res) {
+      const id = req.body.soundId
+
+      let snd
+
+      // Find sound from requested id
+      freesound.getSound(id, function (sound) {
+        snd = sound.previews['preview-hq-mp3']
+      })
+      res.send({ sound: snd })
     })
     .listen(PORT, () => console.log(`Listening on ${PORT}`))
 }
