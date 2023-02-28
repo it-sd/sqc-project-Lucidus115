@@ -114,10 +114,6 @@ footer {
   padding: 1.5em;
 }
 
-main {
-  display: flex;
-}
-
 #timeline {
   border: 1px solid var(--text-color);
   min-height: 85%;
