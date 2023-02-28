@@ -6,6 +6,7 @@
   <main>
     <section id="sound-list">
       <h2>My Sounds</h2>
+      <button id="rand-sound">Random Sound</button>
         
     </section>
 
@@ -13,4 +14,14 @@
         
     </div>
   </main>
+  <script>
+    
+const btn = document.getElementById('rand-sound')
+
+const retrieveSound = function () {
+  console.log("Epiccc")
+}
+
+btn.addEventListener('click', (e) => retrieveSound())
+  </script>
 <%- include('shared/footer'); -%>
