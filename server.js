@@ -68,7 +68,7 @@ const runGatherUsersQuery = async function () {
 
 const main = function () {
   freesound.setToken(process.env.FREESOUND_KEY)
-  
+
   express()
     .use(express.static(path.join(__dirname, 'resources')))
     .use(express.json())
