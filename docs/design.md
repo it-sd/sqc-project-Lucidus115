@@ -25,3 +25,14 @@ Such elements may include:
 - A way to trim or repeat audio samples
 
 ![visual explanation](design-explanation.png)
+
+## Color Palette
+![color scheme](color-palette.png)
+
+This color palette has been the plan since the beginning. The darker colors make it easier on a user's eyes. They cannot be too dark, otherwise the contrast with the white font might strain the eyes. Purple is a nice color and especially compliments the darker tones. Like an artist's portrayl of a purple galaxy, the purple colors highlight exploration and creativity.
+
+## Typography
+- Arial
+- Roboto
+
+Fonts are not as important as the primary focus of this application will not be on reading. That being said, for text elements such as on the about or home page, arial will be a nice and readable font for most. The headings may favor a bold type of this font. Roboto is a fun and modern font and will be used for the workspace. Roboto font will be shown for layer names, audio titles and such should not distract the user too much.
