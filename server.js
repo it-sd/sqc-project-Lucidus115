@@ -97,11 +97,10 @@ const main = function () {
       // Find sound from requested id
       freesound.getSound(id, function (sound) {
         snd = sound.previews['preview-hq-mp3']
+      }, function () {
+        console.warn(`Aieeee, sound with id ${id} does not exist`)
       })
 
-      if (snd === undefined) {
-        console.warn(`Aieeee, sound with id ${id} does not exist`)
-      }
       res.send({ sound: snd })
     })
     .listen(PORT, () => console.log(`Listening on ${PORT}`))
