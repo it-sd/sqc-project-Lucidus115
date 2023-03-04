@@ -5,6 +5,11 @@
   --nav-color: rgb(81, 21, 150);
 }
 
+.error-msg {
+    color: #a82929;
+    font-style: italic;
+}
+
 html {
   color: var(--text-color);
   background-color: var(--bg-color); 
