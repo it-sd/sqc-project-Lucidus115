@@ -24,7 +24,6 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
-    "freesound": "^0.0.4",
     "jasmine": "^4.5.0",
     "nyc": "^15.1.0"
   },
@@ -32,6 +31,7 @@
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
+    "freesound": "^0.0.4",
     "pg": "^8.9.0"
   }
 }
