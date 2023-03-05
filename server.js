@@ -70,14 +70,13 @@ const runGatherUsersQuery = async function () {
 }
 
 const main = function () {
-  
   freesound.setToken(process.env.FREESOUND_KEY)
 
   express()
     .use(cors())
     .use(express.static(path.join(__dirname, 'resources')))
     .use(express.json())
-    .use(function(req, res, next) {
+    .use(function (req, res, next) {
       let origin = req.header('Origin')
 
       if (origin === undefined) {
@@ -87,9 +86,9 @@ const main = function () {
       res.header('Access-Control-Allow-Origin', origin)
       res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, PATCH, POST, DELETE')
       res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization')
-  
-      next();
-  })
+
+      next()
+    })
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
     .get('/health', async function (_req, res) {
