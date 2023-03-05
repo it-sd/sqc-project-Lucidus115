@@ -75,6 +75,17 @@ const main = function () {
   express()
     .use(express.static(path.join(__dirname, 'resources')))
     .use(express.json())
+    .use(function (req, res, next) {
+      let origin = req.header('Origin')
+
+      if (origin === undefined) {
+        origin = '*'
+      }
+
+      res.setHeader('Access-Control-Allow-Origin', origin)
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+      next()
+    })
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
     .get('/health', async function (_req, res) {
