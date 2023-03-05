@@ -2,10 +2,12 @@ require('dotenv').config()
 
 const assert = require('assert')
 const express = require('express')
-const freesound = require('freesound')
+const { default: FreeSound } = require('freesound-client')
 const path = require('path')
 const PORT = process.env.PORT || 5163
 const { Pool } = require('pg')
+
+const freesound = new FreeSound()
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL
@@ -67,6 +69,7 @@ const runGatherUsersQuery = async function () {
 }
 
 const main = function () {
+  
   freesound.setToken(process.env.FREESOUND_KEY)
 
   express()
@@ -92,16 +95,18 @@ const main = function () {
     .post('/audio-search', async function (req, res) {
       const id = req.body.soundId
 
-      let snd
-
       // Find sound from requested id
-      freesound.getSound(id, function (sound) {
-        snd = sound.previews['preview-hq-mp3']
-      }, function () {
-        console.warn(`Aieeee, sound with id ${id} does not exist`)
-      })
+      const sound = await freesound.getSound(id)
 
-      res.send({ sound: snd })
+      const [preview] = await Promise.all([
+        sound.previews['preview-hq-mp3']
+      ])
+
+      if (preview === undefined) {
+        console.warn(`Aieeee, sound with id ${id} does not exist`)
+      }
+
+      res.send({ sound: preview })
     })
     .listen(PORT, () => console.log(`Listening on ${PORT}`))
 }
