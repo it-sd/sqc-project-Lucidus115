@@ -112,15 +112,34 @@ const main = function () {
       // Find sound from requested id
       const sound = await freesound.getSound(id)
 
-      const [preview] = await Promise.all([
-        sound.previews['preview-hq-mp3']
-      ])
-
-      if (preview === undefined) {
+      if (sound === undefined) {
         console.warn(`Aieeee, sound with id ${id} does not exist`)
       }
 
-      res.send({ sound: preview })
+      const [title, desc, preview] = await Promise.all([
+        sound.name,
+        sound.description,
+        sound.previews !== undefined ? sound.previews['preview-hq-mp3'] : undefined
+      ])
+
+      let soundObj = {
+        name: title,
+        description: desc,
+        preview
+      }
+
+      for (const val of Object.entries(soundObj)) {
+        if (val[1] !== undefined) {
+          break
+        }
+        soundObj = null
+      }
+
+      const result = {
+        sound: soundObj
+      }
+
+      res.send(result)
     })
     .listen(PORT, () => console.log(`Listening on ${PORT}`))
 }

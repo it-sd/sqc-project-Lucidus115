@@ -30,13 +30,13 @@ const retrieveSound = async function () {
     headers: { 'Content-Type': 'application/json' }
   })
 
-  const result = await res.json();
+  const result = await res.json()
 
   if (result.sound === undefined) {
     msg.innerHTML = 'Error: A problem occured finding a sound'
   }
 
-  const audio = new Audio(result.sound)
+  const audio = new Audio(result.sound.preview)
   audio.play()
 }
 
