@@ -146,3 +146,25 @@ footer {
 #rand-sound:hover {
   background-color: rgb(106, 40, 182);
 }
+
+#search-bar {
+  display: flex;
+  float: right;
+  margin: 1em;
+}
+
+#search-bar input[type=text] {
+  border: none;
+  font-size: medium;
+  padding: 0.5em;
+}
+
+#search-bar button {
+  background-color: var(--alt-color);
+  background-image: url("search-icon.png");
+  background-repeat: no-repeat;
+  background-position: 0.5em;
+  border: none;
+  cursor: pointer;
+  padding: 1.5em;
+}
