@@ -3,12 +3,12 @@ require('dotenv').config()
 const assert = require('assert')
 const cors = require('cors')
 const express = require('express')
-const { default: FreeSound } = require('freesound-client')
+const { SoundEditor } = require('./sound-editor')
 const path = require('path')
 const PORT = process.env.PORT || 5163
 const { Pool } = require('pg')
 
-const freeSound = new FreeSound()
+const sndEdit = new SoundEditor(process.env.FREESOUND_KEY)
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL
@@ -69,9 +69,7 @@ const runGatherUsersQuery = async function () {
   return { status, msg, results }
 }
 
-const main = function () {
-  freeSound.setToken(process.env.FREESOUND_KEY)
-
+const main = function () {  
   express()
     .use(cors())
     .use(express.static(path.join(__dirname, 'resources')))
@@ -110,8 +108,7 @@ const main = function () {
       const text = req.body.textSearch
 
       // Search sounds with text
-      //TODO: Only show results for those with permissive license
-      const soundResults = await freeSound.textSearch(text);
+      const soundResults = await sndEdit.searchSounds(text)
 
       const result = {
         soundResults: soundResults

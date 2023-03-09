@@ -121,10 +121,7 @@ footer {
 
 #timeline {
   border: 1px solid var(--text-color);
-  min-height: 85%;
-  min-width: 75%;
-  right: 5%;
-  position: absolute;
+  padding: 15%;
 }
 
 #sound-list {
