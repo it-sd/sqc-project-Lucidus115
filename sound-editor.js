@@ -34,18 +34,26 @@ class Timeline {
     this.#nodes = [[]]
   }
 
+  addLayer() {
+    this.#nodes.push([])
+  }
+
+  removeLayer(layer) {
+    this.#nodes.splice(layer.id, 1)
+  }
+
   insertNode(layer, node) {
-    this.#nodes[layer].push(node)
+    this.#nodes[layer.id].push(node)
   }
 
   removeNode(layer, node) {
-    const idx = this.#nodes[layer].indexOf(node)
-    this.#nodes[layer].splice(idx, 1)
+    const idx = this.#nodes[layer.id].indexOf(node)
+    this.#nodes[layer.id].splice(idx, 1)
   }
 
   /** Retrives the node in the layer inside given the time (in milliseconds) */
   getNode(layer, time) {
-    const node = this.#nodes[layer].find(e => e.startTime <= time && e.endTime >= time)
+    const node = this.#nodes[layer.id].find(e => e.startTime <= time && e.endTime >= time)
     return node
   }
 
@@ -59,6 +67,12 @@ class Node {
   startTime
   endTime
   soundId 
+}
+
+class Layer {
+  id
+  color
+  isActive
 }
 
 module.exports = {

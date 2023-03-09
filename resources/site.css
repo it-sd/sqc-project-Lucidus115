@@ -119,8 +119,15 @@ footer {
   padding: 1.5em;
 }
 
+#menu-bar {
+  align-items: center;
+  align-self: flex-end;
+  display: flex;
+}
+
 #timeline {
   border: 1px solid var(--text-color);
+  overflow: hidden;
   padding: 15%;
 }
 
@@ -128,25 +135,23 @@ footer {
   min-height: 100%;
 }
 
-#rand-sound {
-  background-color: var(--nav-color);
+#menu-bar button {
+  background-color: var(--alt-color);
   border: none;
-  border-radius: 0.5em;
   color: var(--text-color);
   cursor: pointer;
   font-size: 16px;
-  padding: 1.5em;
+  padding: 0.5em;
   text-align: center;
   transition-duration: 0.25s;
 }
 
-#rand-sound:hover {
-  background-color: rgb(106, 40, 182);
+#menu-bar button:hover {
+  background-color: var(--nav-color);
 }
 
 #search-bar {
   display: flex;
-  float: right;
   margin: 1em;
 }
 

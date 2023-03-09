@@ -2,6 +2,7 @@
 <%- include('shared/header'); -%>
   <div id="menu-bar">
     <!--TODO Implement [File, Edit, View, Settings, Help]-->
+    <button id="tl-add-layer">Add Layer</button>
 
     <form id="search-bar">
       <input type="text" placeholder="Search Sounds">
@@ -26,6 +27,8 @@ const baseUrl = 'http://localhost:5163'
 
 const soundList = document.getElementById('sound-list')
 const search = document.getElementById('search-bar')
+
+const tlAddLayer = document.getElementById('tl-add-layer')
 
 const searchSound = async function (text) {
   const url = new URL('/audio-search', baseUrl)
@@ -53,6 +56,21 @@ const displaySounds = function (soundResults) {
     soundList.appendChild(soundDiv)
   }
 }
+
+const addLayer = async function() {
+  const url = new URL('/tl-layer', baseUrl)
+  const res = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify({ textSearch: text }),
+    headers: { 'Content-Type': 'application/json' }
+  })
+
+  const result = await res.json()
+}
+
+document.addEventListener('layerAdd', (e) => addLayer())
+
+tlAddLayer.addEventListener('click', (e) => document.dispatchEvent(new Event('layerAdd')))
 
 search.addEventListener('submit', (e) => {
   e.preventDefault()
