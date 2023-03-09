@@ -11,9 +11,8 @@
   </div>
   <main>
     <section id="sound-list">
-      <h2>My Sounds</h2>
-      <button id="rand-sound">Random Sound</button>
-      <span class="error-msg" id="sound-feedback"></span>
+      <h2>Sounds</h2>
+      <span class="error-msg"></span>
         
     </section>
 
@@ -24,28 +23,41 @@
   <script>
 
 const baseUrl = 'http://localhost:5163'
-const btn = document.getElementById('rand-sound')
-const msg = document.getElementById('sound-feedback')
 
-const retrieveSound = async function () {
-  const soundId = Math.round(Math.random() * 10000)
+const soundList = document.getElementById('sound-list')
+const search = document.getElementById('search-bar')
+
+const searchSound = async function (text) {
   const url = new URL('/audio-search', baseUrl)
   const res = await fetch(url, {
     method: 'POST',
-    body: JSON.stringify({ soundId: soundId }),
+    body: JSON.stringify({ textSearch: text }),
     headers: { 'Content-Type': 'application/json' }
   })
 
   const result = await res.json()
 
-  if (result.sound === undefined) {
-    msg.innerHTML = 'Error: A problem occured finding a sound'
+  if (result.soundResults === undefined) {
+    msg.innerHTML = 'Error: A problem occured searching sounds'
   }
 
-  const audio = new Audio(result.sound.preview)
-  audio.play()
+  console.log(result.soundResults)
+  displaySounds(result.soundResults)
 }
 
-btn.addEventListener('click', (e) => retrieveSound())
+const displaySounds = function (soundResults) {
+  for (const sound of soundResults.results) {
+    const soundDiv = document.createElement("div")
+    soundDiv.appendChild(document.createTextNode(sound.name))
+
+    soundList.appendChild(soundDiv)
+  }
+}
+
+search.addEventListener('submit', (e) => {
+  e.preventDefault()
+  const text = search.querySelector('input').value
+  searchSound(text)
+}, false)
   </script>
 <%- include('shared/footer'); -%>

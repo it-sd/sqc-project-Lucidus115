@@ -8,7 +8,7 @@ const path = require('path')
 const PORT = process.env.PORT || 5163
 const { Pool } = require('pg')
 
-const freesound = new FreeSound()
+const freeSound = new FreeSound()
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL
@@ -70,7 +70,7 @@ const runGatherUsersQuery = async function () {
 }
 
 const main = function () {
-  freesound.setToken(process.env.FREESOUND_KEY)
+  freeSound.setToken(process.env.FREESOUND_KEY)
 
   express()
     .use(cors())
@@ -107,36 +107,14 @@ const main = function () {
       res.render('audio-new')
     })
     .post('/audio-search', async function (req, res) {
-      const id = req.body.soundId
+      const text = req.body.textSearch
 
-      // Find sound from requested id
-      const sound = await freesound.getSound(id)
-
-      if (sound === undefined) {
-        console.warn(`Aieeee, sound with id ${id} does not exist`)
-      }
-
-      const [title, desc, preview] = await Promise.all([
-        sound.name,
-        sound.description,
-        sound.previews !== undefined ? sound.previews['preview-hq-mp3'] : undefined
-      ])
-
-      let soundObj = {
-        name: title,
-        description: desc,
-        preview
-      }
-
-      for (const val of Object.entries(soundObj)) {
-        if (val[1] !== undefined) {
-          break
-        }
-        soundObj = null
-      }
+      // Search sounds with text
+      //TODO: Only show results for those with permissive license
+      const soundResults = await freeSound.textSearch(text);
 
       const result = {
-        sound: soundObj
+        soundResults: soundResults
       }
 
       res.send(result)
