@@ -1,6 +1,15 @@
 const assert = require('assert')
 const { default: FreeSound } = require('freesound-client')
 
+const defaultColors = [
+  { r: 240, g: 45, b: 45 }, // Red
+  { r: 240, g: 100, b: 45 }, // Orange
+  { r: 255, g: 195, b: 0 }, // Yellow
+  { r: 65, g: 225, b: 30 }, // Green
+  { r: 30, g: 107, b: 218 }, // Blue
+  { r: 135, g: 32, b: 209 }, // Violet
+]
+
 class SoundEditor {
 
   #freeSound
@@ -27,52 +36,69 @@ class SoundEditor {
 }
 
 class Timeline {
-  // 2D array of nodes representing rows and columns
-  #nodes
+  #layers
 
   constructor() {
-    this.#nodes = [[]]
+    this.#layers = [new Layer(defaultColors[0])]
   }
 
   addLayer() {
-    this.#nodes.push([])
+    const idx = this.#layers.length
+    const color = defaultColors[idx % defaultColors.length]
+
+    this.#layers.push(new Layer(color))
   }
 
   removeLayer(layer) {
-    this.#nodes.splice(layer.id, 1)
+    this.#layers.splice(layer.id, 1)
   }
 
-  insertNode(layer, node) {
-    this.#nodes[layer.id].push(node)
+  getLayer(index) {
+    return this.#layers[index]
   }
 
-  removeNode(layer, node) {
-    const idx = this.#nodes[layer.id].indexOf(node)
-    this.#nodes[layer.id].splice(idx, 1)
-  }
-
-  /** Retrives the node in the layer inside given the time (in milliseconds) */
-  getNode(layer, time) {
-    const node = this.#nodes[layer.id].find(e => e.startTime <= time && e.endTime >= time)
-    return node
-  }
-
-  /** Returns a copy of all the nodes */
-  get nodes() {
-    return this.#nodes.slice(0)
-  }
+  // /** Returns a copy of all the samples */
+  // get samples() {
+  //   return this.#samples.slice(0)
+  // }
 }
 
-class Node {
+class SoundSample {
   startTime
   endTime
   soundId 
 }
 
 class Layer {
-  id
   color
   isActive
+  #samples
+
+  constructor(color) {
+    this.color = color
+    this.isActive = true
+    this.#samples = []
+  }
+
+  insertSample(soundSample) {
+    this.#samples.push(soundSample)
+  }
+
+  removeSample(soundSample) {
+    const idx = this.#samples.indexOf(soundSample)
+    this.#samples.splice(idx, 1)
+  }
+
+  moveSample(newLayer, soundSample) {
+    this.removeSample(soundSample)
+    newLayer.insertSample(soundSample)
+  }
+
+  /** Retrives the sound sample in the layer inside given the time (in milliseconds) */
+  getSample(time) {
+    const soundSample = this.#samples.find(e => e.startTime <= time && e.endTime >= time)
+    return soundSample
+  }
 }
 
 module.exports = {
