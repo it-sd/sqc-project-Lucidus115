@@ -101,12 +101,12 @@ const main = function () {
     .get('/about', function (_req, res) {
       res.render('about')
     })
-    .get('/audio-new', function (_req, res) {
-      res.render('audio-new', {
+    .get('/sound-editor', function (_req, res) {
+      res.render('sound-editor', {
         layers: sndEdit.timeline.layers,
       })
     })
-    .post('/audio-search', async function (req, res) {
+    .post('/sound-search', async function (req, res) {
       const text = req.body.textSearch
 
       // Search sounds with text

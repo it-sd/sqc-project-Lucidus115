@@ -33,9 +33,12 @@ const search = document.getElementById('search-bar')
 const tlAddLayer = document.getElementById('tl-add-layer')
 
 //TODO: Render only elements that have changed since last interaction
+const drawElements = async function () {
+  const url = new URL('/sound-request-draw')
+}
 
 const searchSound = async function (text) {
-  const url = new URL('/audio-search', baseUrl)
+  const url = new URL('/sound-search', baseUrl)
   const res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify({ textSearch: text }),
@@ -62,7 +65,7 @@ const displaySounds = function (soundResults) {
 }
 
 const addLayer = async function() {
-  const url = new URL('/tl-layer', baseUrl)
+  const url = new URL('/sound-tl-layer', baseUrl)
   const res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify({ textSearch: text }),
