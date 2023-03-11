@@ -2,18 +2,18 @@ const assert = require('assert')
 const { default: FreeSound } = require('freesound-client')
 
 const defaultColors = [
-  { r: 240, g: 45, b: 45 }, // Red
-  { r: 240, g: 100, b: 45 }, // Orange
-  { r: 255, g: 195, b: 0 }, // Yellow
-  { r: 65, g: 225, b: 30 }, // Green
-  { r: 30, g: 107, b: 218 }, // Blue
-  { r: 135, g: 32, b: 209 }, // Violet
+  'rgb(240, 45, 45)', // Red
+  'rgb(240, 100, 45)', // Orange
+  'rgb(255, 195, 0)', // Yellow
+  'rgb(65, 225, 30 )', // Green
+  'rgb(30, 107, 218 )', // Blue
+  'rgb(135, 32, 209)', // Violet
 ]
 
 class SoundEditor {
 
   #freeSound
-  #timeline
+  timeline
 
   constructor(freeSoundKey) {
     assert.equal(typeof freeSoundKey, 'string', `Must pass in a string 
@@ -22,16 +22,12 @@ class SoundEditor {
     this.#freeSound = new FreeSound()
     this.#freeSound.setToken(process.env.FREESOUND_KEY)
 
-    this.#timeline = new Timeline()
+    this.timeline = new Timeline()
   }
 
   //TODO: Only show results for those with permissive license
   async searchSounds(text) {
     return this.#freeSound.textSearch(text)
-  }
-
-  get timeline() {
-    this.#timeline
   }
 }
 
@@ -57,10 +53,10 @@ class Timeline {
     return this.#layers[index]
   }
 
-  // /** Returns a copy of all the samples */
-  // get samples() {
-  //   return this.#samples.slice(0)
-  // }
+  /** Returns an immutable copy of the layers list */
+  get layers() {
+    return Object.freeze(this.#layers.slice(0))
+  }
 }
 
 class SoundSample {
@@ -72,11 +68,13 @@ class SoundSample {
 class Layer {
   color
   isActive
+  name
   #samples
 
   constructor(color) {
     this.color = color
     this.isActive = true
+    this.name = 'New Layer'
     this.#samples = []
   }
 
@@ -98,6 +96,11 @@ class Layer {
   getSample(time) {
     const soundSample = this.#samples.find(e => e.startTime <= time && e.endTime >= time)
     return soundSample
+  }
+
+  /** Returns an immutable copy of the samples list */
+  get samples() {
+    return Object.freeze(this.#samples.slice(0))
   }
 }
 
