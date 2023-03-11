@@ -41,12 +41,16 @@ class Timeline {
   addLayer() {
     const idx = this.#layers.length
     const color = defaultColors[idx % defaultColors.length]
+    const layer = new Layer(color)
 
-    this.#layers.push(new Layer(color))
+    this.#layers.push(layer)
+    return layer
   }
 
-  removeLayer(layer) {
-    this.#layers.splice(layer.id, 1)
+  /** Returns true if a layer was present and removed */
+  removeLayer(layerId) {
+    const layer = this.#layers[layerId]
+    return this.#layers.splice(layer, 1).length != 0
   }
 
   getLayer(index) {

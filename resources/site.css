@@ -127,7 +127,8 @@ footer {
 
 #timeline {
   border: 1px solid var(--text-color);
-  overflow: hidden;
+  height: 5em;
+  overflow: scroll;
   padding: 15%;
 }
 

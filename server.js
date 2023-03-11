@@ -106,7 +106,7 @@ const main = function () {
         layers: sndEdit.timeline.layers,
       })
     })
-    .post('/sound-search', async function (req, res) {
+    .post('/sound-editor/search', async function (req, res) {
       const text = req.body.textSearch
 
       // Search sounds with text
@@ -114,6 +114,31 @@ const main = function () {
 
       const result = {
         soundResults: soundResults
+      }
+
+      res.send(result)
+    })
+    .post('/sound-editor/layer/:action', function (req, res) {
+      let result = {}
+      switch (req.params.action) {
+        case 'add':
+          const layer = sndEdit.timeline.addLayer()
+          result['addedLayer'] = {
+            name: layer.name,
+            color: layer.color
+          }
+          break;
+
+        case 'remove/:id':
+          const id = Number.parseInt(req.params.action.split(':')[1])
+          if (!Number.isInteger(id)) {
+            console.warn('Layer id must be an integer value');
+          }
+          result['wasRemoved'] = sndEdit.timeline.removeLayer(id)
+          break;
+      
+        default:
+          break;
       }
 
       res.send(result)

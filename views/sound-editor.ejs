@@ -30,15 +30,11 @@ const baseUrl = 'http://localhost:5163'
 const soundList = document.getElementById('sound-list')
 const search = document.getElementById('search-bar')
 
+const timeline = document.getElementById('timeline')
 const tlAddLayer = document.getElementById('tl-add-layer')
 
-//TODO: Render only elements that have changed since last interaction
-const drawElements = async function () {
-  const url = new URL('/sound-request-draw')
-}
-
 const searchSound = async function (text) {
-  const url = new URL('/sound-search', baseUrl)
+  const url = new URL('/sound-editor/search', baseUrl)
   const res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify({ textSearch: text }),
@@ -57,7 +53,7 @@ const searchSound = async function (text) {
 
 const displaySounds = function (soundResults) {
   for (const sound of soundResults.results) {
-    const soundDiv = document.createElement("div")
+    const soundDiv = document.createElement('div')
     soundDiv.appendChild(document.createTextNode(sound.name))
 
     soundList.appendChild(soundDiv)
@@ -65,14 +61,19 @@ const displaySounds = function (soundResults) {
 }
 
 const addLayer = async function() {
-  const url = new URL('/sound-tl-layer', baseUrl)
+  const url = new URL(`/sound-editor/layer/add`, baseUrl)
   const res = await fetch(url, {
     method: 'POST',
-    body: JSON.stringify({ textSearch: text }),
-    headers: { 'Content-Type': 'application/json' }
   })
 
   const result = await res.json()
+
+  const layer = result.addedLayer
+  const h2 = document.createElement('h2')
+  h2.appendChild(document.createTextNode(`Layer: ${layer.name}`))
+  h2.style.color = layer.color
+
+  timeline.appendChild(h2)
 }
 
 document.addEventListener('layerAdd', (e) => addLayer())
