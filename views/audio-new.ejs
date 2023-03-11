@@ -18,7 +18,9 @@
     </section>
 
     <div id="timeline">
-        
+      <%_ for (const layer of layers) { _%>
+        <h2 style="color: <%= layer.color %>">Layer: <%= layer.name %></h2>
+        <%_ } _%>
     </div>
   </main>
   <script>
@@ -29,6 +31,8 @@ const soundList = document.getElementById('sound-list')
 const search = document.getElementById('search-bar')
 
 const tlAddLayer = document.getElementById('tl-add-layer')
+
+//TODO: Render only elements that have changed since last interaction
 
 const searchSound = async function (text) {
   const url = new URL('/audio-search', baseUrl)

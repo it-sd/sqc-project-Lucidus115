@@ -102,7 +102,9 @@ const main = function () {
       res.render('about')
     })
     .get('/audio-new', function (_req, res) {
-      res.render('audio-new')
+      res.render('audio-new', {
+        layers: sndEdit.timeline.layers,
+      })
     })
     .post('/audio-search', async function (req, res) {
       const text = req.body.textSearch
