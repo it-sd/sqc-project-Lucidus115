@@ -171,3 +171,10 @@ footer {
   cursor: pointer;
   padding: 1.5em;
 }
+
+.tl-layer {
+  cursor: pointer;
+  height: 5em;
+  width: 15%;
+  padding: 1.5em;
+}

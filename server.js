@@ -102,9 +102,17 @@ const main = function () {
       res.render('about')
     })
     .get('/sound-editor', function (_req, res) {
-      res.render('sound-editor', {
-        layers: sndEdit.timeline.layers,
-      })
+      res.render('sound-editor')
+    })
+    .post('/sound-editor/load/:project', function (req, res) {
+      //TODO: Use project id to load from database
+
+      const timeline = sndEdit.timeline
+      const result = {
+        layers: timeline.layers
+      }
+
+      res.send(result)
     })
     .post('/sound-editor/search', async function (req, res) {
       const text = req.body.textSearch
@@ -125,7 +133,8 @@ const main = function () {
           const layer = sndEdit.timeline.addLayer()
           result['addedLayer'] = {
             name: layer.name,
-            color: layer.color
+            color: layer.color,
+            id: sndEdit.timeline.numOfLayers - 1
           }
           break;
 

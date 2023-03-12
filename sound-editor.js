@@ -57,6 +57,10 @@ class Timeline {
     return this.#layers[index]
   }
 
+  get numOfLayers() {
+    return this.#layers.length
+  }
+
   /** Returns an immutable copy of the layers list */
   get layers() {
     return Object.freeze(this.#layers.slice(0))

@@ -18,11 +18,10 @@
     </section>
 
     <div id="timeline">
-      <%_ for (const layer of layers) { _%>
-        <h2 style="color: <%= layer.color %>">Layer: <%= layer.name %></h2>
-        <%_ } _%>
+
     </div>
   </main>
+  <script type="text/javascript" src="sound-elements.js"></script>
   <script>
 
 const baseUrl = 'http://localhost:5163'
@@ -60,7 +59,18 @@ const displaySounds = function (soundResults) {
   }
 }
 
-const addLayer = async function() {
+window.addEventListener('load', async (e) => {
+  const url = new URL('/sound-editor/load/0', baseUrl)
+  const res = await fetch(url, {
+    method: 'POST'
+  })
+
+  const result = await res.json()
+  for (const layer of result.layers) {
+    timeline.appendChild(spawnLayer(layer))
+  }
+})
+document.addEventListener('layerAdd', async (e) => {
   const url = new URL(`/sound-editor/layer/add`, baseUrl)
   const res = await fetch(url, {
     method: 'POST',
@@ -69,14 +79,9 @@ const addLayer = async function() {
   const result = await res.json()
 
   const layer = result.addedLayer
-  const h2 = document.createElement('h2')
-  h2.appendChild(document.createTextNode(`Layer: ${layer.name}`))
-  h2.style.color = layer.color
 
-  timeline.appendChild(h2)
-}
-
-document.addEventListener('layerAdd', (e) => addLayer())
+  timeline.appendChild(spawnLayer(layer))
+})
 
 tlAddLayer.addEventListener('click', (e) => document.dispatchEvent(new Event('layerAdd')))
 
