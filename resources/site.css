@@ -127,9 +127,8 @@ footer {
 
 #timeline {
   border: 1px solid var(--text-color);
-  height: 5em;
+  height: 24em;
   overflow: scroll;
-  padding: 15%;
 }
 
 #sound-list {
@@ -175,6 +174,6 @@ footer {
 .tl-layer {
   cursor: pointer;
   height: 5em;
-  width: 15%;
   padding: 1.5em;
+  width: 15%;
 }

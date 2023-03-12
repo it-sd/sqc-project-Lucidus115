@@ -18,7 +18,7 @@
     </section>
 
     <div id="timeline">
-
+      <div id="layers"></div>
     </div>
   </main>
   <script type="text/javascript" src="sound-elements.js"></script>
@@ -67,7 +67,7 @@ window.addEventListener('load', async (e) => {
 
   const result = await res.json()
   for (const layer of result.layers) {
-    timeline.appendChild(spawnLayer(layer))
+    document.getElementById('layers').appendChild(spawnLayer(layer))
   }
 })
 document.addEventListener('layerAdd', async (e) => {
@@ -80,7 +80,7 @@ document.addEventListener('layerAdd', async (e) => {
 
   const layer = result.addedLayer
 
-  timeline.appendChild(spawnLayer(layer))
+  document.getElementById('layers').appendChild(spawnLayer(layer))
 })
 
 tlAddLayer.addEventListener('click', (e) => document.dispatchEvent(new Event('layerAdd')))
