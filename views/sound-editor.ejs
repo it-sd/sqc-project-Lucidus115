@@ -21,7 +21,8 @@
     </section>
 
     <div id="timeline">
-      <div id="layers"></div>
+      <div id="layers">
+      </div>
     </div>
   </main>
   <script type="text/javascript" src="sound-elements.js"></script>
@@ -52,6 +53,7 @@ const searchSound = async function (text) {
   displaySounds(result.soundResults)
 }
 
+let dragged
 const displaySounds = function (soundResults) {
   for (const child of soundList.querySelectorAll('div.sound-sample')) {
     child.remove()
@@ -63,21 +65,8 @@ const displaySounds = function (soundResults) {
     })
     soundList.appendChild(element)
 
-    element.addEventListener('click', async (e) => {
-      console.log(`DEBUG: Add ${element.id} to timeline`)
-      const url = new URL('/sound-editor/sample/addToLayer', baseUrl)
-
-      const res = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify({ 
-          layerId: 0,
-          sampleId: element.id
-        }),
-        headers: { 'Content-Type': 'application/json' }
-      })
-
-      const result = await res.json()
-      console.log(result.success)
+    element.addEventListener('dragstart', (e) => {
+      dragged = element
     })
   }
 }

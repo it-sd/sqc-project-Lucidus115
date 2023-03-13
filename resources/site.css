@@ -129,6 +129,8 @@ footer {
   border: 1px solid var(--text-color);
   height: 24em;
   overflow: scroll;
+  user-select: none;
+  width: 50em;
 }
 
 #sound-list {
@@ -180,6 +182,16 @@ footer {
   width: 75px;
 }
 
+.tl-samples {
+  display: flex;
+  flex-grow: 1;
+}
+
+.layer-group {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
 .sound-sample {
   border: 1px solid var(--text-color);
   cursor: pointer;
@@ -188,4 +200,8 @@ footer {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+}
+
+.dragover {
+  background-color: var(--alt-color);
 }

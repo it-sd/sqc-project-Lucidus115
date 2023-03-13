@@ -96,13 +96,25 @@ class Layer {
     this.#samples = []
   }
 
-  insertSample(soundSample) {
-    this.#samples.push(soundSample)
+  insertSample(soundId) {
+    //TODO: Get sound length and start time
+    const sample = {
+      startTime: 0,
+      endTime: 0,
+      soundId: soundId
+    }
+
+    this.#samples.push(sample)
   }
 
-  removeSample(soundSample) {
-    const idx = this.#samples.indexOf(soundSample)
-    this.#samples.splice(idx, 1)
+  /**
+   * 
+   * @param {number} soundId - The freesound id representing this sound 
+   * @param {number} sampleId - The id of the sample
+   */
+  removeSample(soundId, sampleId) {
+    // const idx = this.#samples.indexOf(soundSample)
+    // this.#samples.splice(idx, 1)
   }
 
   moveSample(newLayer, soundSample) {
