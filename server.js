@@ -150,6 +150,28 @@ const main = function () {
 
       res.send(result)
     })
+    .post('/sound-editor/sample/:action', function (req, res) {
+      let result = {}
+      switch (req.params.action) {
+        case 'addToLayer':
+          const soundId = Number.parseInt(req.body.sampleId.split('-')[1])
+          const sample = {
+            startTime: 0,
+            endTime: 0,
+            soundId: soundId
+          }
+          sndEdit.timeline.getLayer(req.body.layerId).insertSample(sample)
+
+          //TODO: Get sound length and start time
+          result['success'] = `Added sound ${soundId}`
+          break;
+      
+        default:
+          break;
+      }
+
+      res.send(result)
+    })
     .listen(PORT, () => console.log(`Listening on ${PORT}`))
 }
 

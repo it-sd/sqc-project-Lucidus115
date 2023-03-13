@@ -57,10 +57,28 @@ const displaySounds = function (soundResults) {
     child.remove()
   }
   for (const sound of soundResults.results) {
-    soundList.appendChild(Schematic.soundSample({
+    const element = Schematic.soundSample({
       id: sound.id,
       name: sound.name
-    }))
+    })
+    soundList.appendChild(element)
+
+    element.addEventListener('click', async (e) => {
+      console.log(`DEBUG: Add ${element.id} to timeline`)
+      const url = new URL('/sound-editor/sample/addToLayer', baseUrl)
+
+      const res = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({ 
+          layerId: 0,
+          sampleId: element.id
+        }),
+        headers: { 'Content-Type': 'application/json' }
+      })
+
+      const result = await res.json()
+      console.log(result.success)
+    })
   }
 }
 
