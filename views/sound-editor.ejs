@@ -11,10 +11,13 @@
 
   </div>
   <main>
-    <section id="sound-list">
+    <section>
+
       <h2>Sounds</h2>
-      <span class="error-msg"></span>
-        
+      <div id="sound-list">
+        <span class="error-msg"></span>
+      </div>
+
     </section>
 
     <div id="timeline">
@@ -45,17 +48,19 @@ const searchSound = async function (text) {
   if (result.soundResults === undefined) {
     msg.innerHTML = 'Error: A problem occured searching sounds'
   }
-
-  console.log(result.soundResults)
+  
   displaySounds(result.soundResults)
 }
 
 const displaySounds = function (soundResults) {
+  for (const child of soundList.querySelectorAll('div.sound-sample')) {
+    child.remove()
+  }
   for (const sound of soundResults.results) {
-    const soundDiv = document.createElement('div')
-    soundDiv.appendChild(document.createTextNode(sound.name))
-
-    soundList.appendChild(soundDiv)
+    soundList.appendChild(Schematic.soundSample({
+      id: sound.id,
+      name: sound.name
+    }))
   }
 }
 
@@ -67,7 +72,7 @@ window.addEventListener('load', async (e) => {
 
   const result = await res.json()
   for (const layer of result.layers) {
-    document.getElementById('layers').appendChild(spawnLayer(layer))
+    document.getElementById('layers').appendChild(Schematic.layer(layer))
   }
 })
 document.addEventListener('layerAdd', async (e) => {
@@ -80,7 +85,7 @@ document.addEventListener('layerAdd', async (e) => {
 
   const layer = result.addedLayer
 
-  document.getElementById('layers').appendChild(spawnLayer(layer))
+  document.getElementById('layers').appendChild(Schematic.layer(layer))
 })
 
 tlAddLayer.addEventListener('click', (e) => document.dispatchEvent(new Event('layerAdd')))

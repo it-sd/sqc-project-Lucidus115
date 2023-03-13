@@ -1,7 +1,6 @@
 require('dotenv').config()
 
 const assert = require('assert')
-const cors = require('cors')
 const express = require('express')
 const { SoundEditor } = require('./sound-editor')
 const path = require('path')
@@ -71,7 +70,6 @@ const runGatherUsersQuery = async function () {
 
 const main = function () {  
   express()
-    .use(cors())
     .use(express.static(path.join(__dirname, 'resources')))
     .use(express.json())
     .use(function (req, res, next) {
