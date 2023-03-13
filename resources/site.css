@@ -195,7 +195,6 @@ footer {
 .sound-sample {
   border: 1px solid var(--text-color);
   cursor: pointer;
-  height: 2.5em;
   padding: 1.5em;
   text-overflow: ellipsis;
   overflow: hidden;
