@@ -11,7 +11,8 @@ const defaultColors = [
 ]
 
 class SoundEditor {
-
+  #is_paused = true
+  #timeSelected = 0
   #freeSound
   timeline
 
@@ -23,11 +24,42 @@ class SoundEditor {
     this.#freeSound.setToken(process.env.FREESOUND_KEY)
 
     this.timeline = new Timeline()
+    this.#update()
   }
 
   //TODO: Only show results for those with permissive license
   async searchSounds(text) {
     return this.#freeSound.textSearch(text)
+  }
+
+  get timeSelected() {
+    return this.#timeSelected
+  }
+
+  play() {
+    console.log(`AIEEEEE ${this.#is_paused}`)
+    this.#is_paused = false
+  }
+
+  pause() {
+    this.#is_paused = true
+  }
+
+  stop() {
+    this.pause()
+    this.#timeSelected = 0
+  }
+
+  #update() {
+    setTimeout(() => {
+        if (!this.#is_paused) {
+          //TODO: Return list of active sound objects (some how)
+          console.log(`update - ${this.#timeSelected}`)
+          this.#timeSelected++
+        }
+
+        this.#update()
+    }, 0)
   }
 }
 
