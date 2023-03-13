@@ -61,9 +61,19 @@ class Timeline {
     return this.#layers.length
   }
 
-  /** Returns an immutable copy of the layers list */
+  /** Returns an immutable copy of layers and its data */
   get layers() {
-    return Object.freeze(this.#layers.slice(0))
+    const arr = []
+    for (let i = 0; i < this.#layers.length; i++) {
+      const layer = this.#layers[i];
+      arr.push({
+        color: layer.color,
+        name: layer.name,
+        id: i
+      })
+    }
+   
+    return Object.freeze(arr)
   }
 }
 
