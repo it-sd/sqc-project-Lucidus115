@@ -23,7 +23,6 @@ class SoundEditor {
     this.#freeSound.setToken(process.env.FREESOUND_KEY)
 
     this.timeline = new Timeline()
-    this.#update()
   }
 
   //TODO: Only show results for those with permissive license

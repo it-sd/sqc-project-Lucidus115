@@ -47,8 +47,7 @@ const Schematic = {
     })
 
     div.addEventListener('sampleAdd', async (e) => {
-      const url = new URL('/sound-editor/timeline/addSample', baseUrl)
-      const res = await fetch(url, {
+      const res = await fetch('/sound-editor/timeline/addSample', {
         method: 'POST',
         body: JSON.stringify({ 
           layerId: e.detail.layerId,

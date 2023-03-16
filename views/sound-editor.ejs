@@ -30,8 +30,6 @@
   <script type="text/javascript" src="sound-elements.js"></script>
   <script>
 
-const baseUrl = 'http://localhost:5163'
-
 const soundList = document.getElementById('sound-list')
 const search = document.getElementById('search-bar')
 
@@ -51,8 +49,7 @@ const tickTimeline = function () {
   }
 
 const searchSound = async function (text) {
-  const url = new URL('/sound-editor/search', baseUrl)
-  const res = await fetch(url, {
+  const res = await fetch('/sound-editor/search', {
     method: 'POST',
     body: JSON.stringify({ textSearch: text }),
     headers: { 'Content-Type': 'application/json' }
@@ -86,8 +83,7 @@ const displaySounds = function (soundResults) {
 }
 
 window.addEventListener('load', async (e) => {
-  const url = new URL('/sound-editor/load/0', baseUrl)
-  const res = await fetch(url, {
+  const res = await fetch('/sound-editor/load/0', {
     method: 'POST'
   })
 
@@ -97,8 +93,7 @@ window.addEventListener('load', async (e) => {
   }
 })
 document.addEventListener('layerAdd', async (e) => {
-  const url = new URL(`/sound-editor/layer/add`, baseUrl)
-  const res = await fetch(url, {
+  const res = await fetch('/sound-editor/layer/add', {
     method: 'POST',
   })
 
