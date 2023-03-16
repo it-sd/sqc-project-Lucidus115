@@ -31,6 +31,10 @@ class SoundEditor {
     return this.#freeSound.textSearch(text)
   }
 
+  async getSoundData(soundId) {
+    return this.#freeSound.getSound(soundId)
+  }
+
   /**
    * 
    * @returns an object with all the used sound data
@@ -54,7 +58,7 @@ class SoundEditor {
       }
     }
     data.sounds = this.#sounds
-    
+
     return data
   }
 
@@ -124,7 +128,7 @@ class Timeline {
 
 class SoundSample {
   startTime
-  endTime
+  duration
   soundId 
 }
 
@@ -141,35 +145,27 @@ class Layer {
     this.#samples = []
   }
 
-  insertSample(soundId) {
-    //TODO: Get sound length and start time
-    const sample = {
-      startTime: 0,
-      endTime: 0,
-      soundId: soundId
-    }
-
+  insertSample(sample) {
     this.#samples.push(sample)
   }
 
   /**
    * 
-   * @param {number} soundId - The freesound id representing this sound 
-   * @param {number} sampleId - The id of the sample
+   * @param {SoundSample} sample - The sound sample to be removed 
    */
-  removeSample(soundId, sampleId) {
-    // const idx = this.#samples.indexOf(soundSample)
-    // this.#samples.splice(idx, 1)
+  removeSample(sample) {
+    const idx = this.#samples.indexOf(sample)
+    this.#samples.splice(idx, 1)
   }
 
-  moveSample(newLayer, soundSample) {
-    this.removeSample(soundSample)
-    newLayer.insertSample(soundSample)
+  moveSample(newLayer, sample) {
+    this.removeSample(sample)
+    newLayer.insertSample(sample)
   }
 
   /** Retrives the sound sample in the layer inside given the time (in milliseconds) */
   getSample(time) {
-    const soundSample = this.#samples.find(e => e.startTime <= time && e.endTime >= time)
+    const soundSample = this.#samples.find(e => e.startTime <= time && (e.startTime + e.duration) >= time)
     return soundSample
   }
 

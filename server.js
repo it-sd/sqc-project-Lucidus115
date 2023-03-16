@@ -156,7 +156,12 @@ const main = function () {
       switch (req.params.action) {
         case 'addSample':
           const soundId = Number.parseInt(req.body.sampleId.split('-')[1])
-          sndEdit.timeline.getLayer(req.body.layerId).insertSample(soundId)          
+          const data = await sndEdit.getSoundData(soundId)
+          sndEdit.timeline.getLayer(req.body.layerId).insertSample({
+            startTime: 0, //TODO: Have client specify startTime
+            duration: data.duration,
+            soundId: soundId
+          })          
 
           result['success'] = `Added sound ${soundId}`
           break;
