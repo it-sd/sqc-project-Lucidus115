@@ -73,10 +73,11 @@ const runGatherUsersQuery = async function () {
 
 const runFindUserQuery = async function (username) {
   const sql = `SELECT * FROM user_account
-  WHERE username='${username}'`
+  WHERE username='${username}'
+  LIMIT 1`
 
   const user = await query(sql)
-  return user 
+  return user[0]
 }
 
 const main = function () {  
@@ -118,7 +119,6 @@ const main = function () {
     })
     .post('/login', async function (req, res) {
         const password = CryptoJS.SHA256(req.body.password).toString()
-        
         //TODO: Check if entry exists in database
         const user = await runFindUserQuery(req.body.username)
         const success = user !== undefined && password === user.password

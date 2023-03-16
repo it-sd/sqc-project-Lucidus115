@@ -24,8 +24,8 @@ CREATE TABLE project (
 INSERT INTO user_account (username, password, email, registered_date, projects)
   VALUES
   (
-    'TestUser', 
-    'password', 
+    'test', 
+    '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 
     'notareal@email.bruh', 
     '2023-02-20 0:0:0+02',
     NULL
