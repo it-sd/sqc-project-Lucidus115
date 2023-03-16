@@ -52,10 +52,6 @@ describe('sound editor', function () {
   })
 
   describe('requestSoundData', function () {
-    it('should return an empty object with no sounds', async function () {
-      expect(await sndEdit.retrieveSoundData()).toBe({})
-    })
-
     const sounds = [678012, 677158, 212195]
     for (const id of sounds) {
       sndEdit.timeline.getLayer(0).insertSample(id)

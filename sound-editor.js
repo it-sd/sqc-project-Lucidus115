@@ -22,6 +22,7 @@ class SoundEditor {
     this.#freeSound = new FreeSound()
     this.#freeSound.setToken(process.env.FREESOUND_KEY)
 
+    this.#sounds = {}
     this.timeline = new Timeline()
   }
 
@@ -40,24 +41,25 @@ class SoundEditor {
       sampleInfo: []
     }
     for (let i = 0; i < this.timeline.numOfLayers; i++) {
-      const layer = this.timeline.getLayer[i]
+      const layer = this.timeline.getLayer(i)
       
       for (const sample of layer.samples) {
 
         // Cache sound if not already cached
-        if (data[sample.soundId] === undefined) {
+        if (data.sounds[sample.soundId] === undefined) {
           await this.#cacheSound(sample.soundId)
         }
 
-        sampleInfo.push(sample)
+        data.sampleInfo.push(sample)
       }
     }
+    data.sounds = this.#sounds
     
     return data
   }
 
   async #cacheSound(soundId) {
-    const sound = await this.#freeSound.getSound(sample.soundId)
+    const sound = await this.#freeSound.getSound(soundId)
     // Prefer high quality ogg format if possible
     this.#sounds[soundId] = sound.previews['preview-hq-ogg'] || sound.previews['preview-hq-mp3']
   }
