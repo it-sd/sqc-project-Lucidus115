@@ -108,18 +108,17 @@ const main = function () {
         // Check if logged in
         const cookie = req.cookies.signedInUser
         if (cookie !== undefined) {
-            // Do stuff
-            res.render('account')
+            // const user = await runFindUserQuery(cookie.username)
+            // const projects = 'todo'
+            res.render('account', {
+              username: cookie.username
+            })
             return
         }
-        res.redirect('login')
-    })
-    .get('/login', async function (_req, res) {
         res.render('login')
     })
     .post('/login', async function (req, res) {
         const password = CryptoJS.SHA256(req.body.password).toString()
-        //TODO: Check if entry exists in database
         const user = await runFindUserQuery(req.body.username)
         const success = user !== undefined && password === user.password
 
