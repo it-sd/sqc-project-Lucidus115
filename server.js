@@ -2,10 +2,12 @@ require('dotenv').config()
 
 const assert = require('assert')
 const express = require('express')
+const cookieParser = require('cookie-parser')
 const { SoundEditor } = require('./sound-editor')
 const path = require('path')
 const PORT = process.env.PORT || 5163
 const { Pool } = require('pg')
+const CryptoJS = require('crypto-js')
 
 const freesoundKey = process.env.FREESOUND_KEY
 const sndEdit = new SoundEditor(freesoundKey)
@@ -71,6 +73,7 @@ const runGatherUsersQuery = async function () {
 
 const main = function () {  
   express()
+    .use(cookieParser())
     .use(express.static(path.join(__dirname, 'resources')))
     .use(express.json())
     .use(function (req, res, next) {
@@ -91,6 +94,37 @@ const main = function () {
     .get('/health', async function (_req, res) {
       const result = await runHealthQuery()
       res.status(result.status).send(result.msg)
+    })
+    .get('/account', async function (req, res) {
+        // Check if logged in
+        const cookie = req.cookies.signedInUser
+        if (cookie !== undefined) {
+            // Do stuff
+            res.render('account')
+            return
+        }
+        res.redirect('login')
+    })
+    .get('/login', async function (_req, res) {
+        res.render('login')
+    })
+    .post('/login', async function (req, res) {
+        const password = CryptoJS.SHA256(req.body.password).toString()
+        
+        //TODO: Check if entry exists in database
+        const success = true
+
+        if (success) {
+          res.cookie('signedInUser', {
+            username: req.body.username,
+            password: password
+          }, { maxAge: 900000 })
+        }
+
+        const result = {
+          success: success
+        }
+        res.send(result)
     })
     .get('/', async function (_req, res) {
       const result = await runGatherUsersQuery()
