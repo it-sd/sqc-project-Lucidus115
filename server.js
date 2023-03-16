@@ -71,6 +71,14 @@ const runGatherUsersQuery = async function () {
   return { status, msg, results }
 }
 
+const runFindUserQuery = async function (username) {
+  const sql = `SELECT * FROM user_account
+  WHERE username='${username}'`
+
+  const user = await query(sql)
+  return user 
+}
+
 const main = function () {  
   express()
     .use(cookieParser())
@@ -112,7 +120,8 @@ const main = function () {
         const password = CryptoJS.SHA256(req.body.password).toString()
         
         //TODO: Check if entry exists in database
-        const success = true
+        const user = await runFindUserQuery(req.body.username)
+        const success = user !== undefined && password === user.password
 
         if (success) {
           res.cookie('signedInUser', {
