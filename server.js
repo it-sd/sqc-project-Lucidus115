@@ -7,7 +7,8 @@ const path = require('path')
 const PORT = process.env.PORT || 5163
 const { Pool } = require('pg')
 
-const sndEdit = new SoundEditor(process.env.FREESOUND_KEY)
+const freesoundKey = process.env.FREESOUND_KEY
+const sndEdit = new SoundEditor(freesoundKey)
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL
@@ -178,5 +179,6 @@ module.exports = {
   query,
   runGatherUsersQuery,
   runHealthQuery,
+  freesoundKey,
   main
 }
