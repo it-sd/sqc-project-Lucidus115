@@ -34,7 +34,6 @@ const soundList = document.getElementById('sound-list')
 const search = document.getElementById('search-bar')
 
 const timeline = document.getElementById('timeline')
-const tlAddLayer = document.getElementById('tl-add-layer')
 
 const tickTimeline = function () {
     setTimeout(() => {
@@ -103,8 +102,12 @@ document.addEventListener('layerAdd', async (e) => {
 
   document.getElementById('layers').appendChild(Schematic.layer(layer))
 })
+document.addEventListener('timelinePlay', async (e) => {
+  console.log('Bruh')
+})
 
-tlAddLayer.addEventListener('click', (e) => document.dispatchEvent(new Event('layerAdd')))
+document.getElementById('tl-play').addEventListener('click', (e) => document.dispatchEvent(new Event('timelinePlay')))
+document.getElementById('tl-add-layer').addEventListener('click', (e) => document.dispatchEvent(new Event('layerAdd')))
 
 search.addEventListener('submit', (e) => {
   e.preventDefault()

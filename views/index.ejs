@@ -1,20 +1,11 @@
 <%- include('shared/head'); -%>
 <%- include('shared/header'); -%>
   <main>
-    <h1>Registered Accounts</h1>
-
-    <%_ for (const account of accounts) { _%>
-      <h2><%= account.username %></h2>
-      <span>Registered on: <%= account.registered_date %></span>
-
-      <h3>Projects</h3>
-
-
-      <% if(account.projects !== null){ %>
-        <p><%= account.projects %></p>
-      <% } else{ %>  
-          <p>No projects created</p>
-      <% } %>
-    <%_ } _%>
+    <h2>Welcome to AudialCat Studio!</h2>
+    <p>
+      Ever wanted a quick and easy sound editor with free to use
+      sounds? Well now you can! Be sure to create an <a href="account">account</a> so you can
+      create and have your projects save.
+    </p>
   </main>
 <%- include('shared/footer'); -%>

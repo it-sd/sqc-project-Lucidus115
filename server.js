@@ -135,9 +135,7 @@ const main = function () {
         res.send(result)
     })
     .get('/', async function (_req, res) {
-      const result = await runGatherUsersQuery()
-
-      res.render('index', { accounts: result.results })
+      res.render('index')
     })
     .get('/about', function (_req, res) {
       res.render('about')
