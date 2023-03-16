@@ -150,15 +150,18 @@ const main = function () {
 
       res.send(result)
     })
-    .post('/sound-editor/sample/:action', function (req, res) {
+    .post('/sound-editor/timeline/:action', async function (req, res) {
       let result = {}
       switch (req.params.action) {
-        case 'addToLayer':
+        case 'addSample':
           const soundId = Number.parseInt(req.body.sampleId.split('-')[1])
-          sndEdit.timeline.getLayer(req.body.layerId).insertSample(soundId)
+          sndEdit.timeline.getLayer(req.body.layerId).insertSample(soundId)          
 
           result['success'] = `Added sound ${soundId}`
           break;
+
+        case 'retrieveSoundData':
+          result['soundData'] = await sndEdit.retrieveSoundData()
       
         default:
           break;

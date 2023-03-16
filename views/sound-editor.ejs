@@ -3,6 +3,8 @@
   <div id="menu-bar">
     <!--TODO Implement [File, Edit, View, Settings, Help]-->
     <button id="tl-add-layer">Add Layer</button>
+    <button id="tl-play">Play</button>
+    <button id="tl-stop">Stop</button>
 
     <form id="search-bar">
       <input type="text" placeholder="Search Sounds">
@@ -35,6 +37,18 @@ const search = document.getElementById('search-bar')
 
 const timeline = document.getElementById('timeline')
 const tlAddLayer = document.getElementById('tl-add-layer')
+
+const tickTimeline = function () {
+    setTimeout(() => {
+        // if (!this.#is_paused) {
+        //   //TODO: Return list of active sound objects (some how)
+        //   console.log(`update - ${this.#timeSelected}`)
+        //   this.#timeSelected++
+        // }
+
+        // this.#update()
+    }, 0)
+  }
 
 const searchSound = async function (text) {
   const url = new URL('/sound-editor/search', baseUrl)

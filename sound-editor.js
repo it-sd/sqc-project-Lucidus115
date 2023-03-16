@@ -11,9 +11,8 @@ const defaultColors = [
 ]
 
 class SoundEditor {
-  #is_paused = true
-  #timeSelected = 0
   #freeSound
+  #sounds
   timeline
 
   constructor(freeSoundKey) {
@@ -32,34 +31,47 @@ class SoundEditor {
     return this.#freeSound.textSearch(text)
   }
 
-  get timeSelected() {
-    return this.#timeSelected
-  }
+  /**
+   * 
+   * @returns an object with all the used sound data
+   */
+  async retrieveSoundData() {
+    const data = {
+      sounds: {},
+      sampleInfo: []
+    }
+    for (let i = 0; i < this.timeline.numOfLayers; i++) {
+      const layer = this.timeline.getLayer[i]
+      
+      for (const sample of layer.samples) {
 
-  play() {
-    console.log(`AIEEEEE ${this.#is_paused}`)
-    this.#is_paused = false
-  }
-
-  pause() {
-    this.#is_paused = true
-  }
-
-  stop() {
-    this.pause()
-    this.#timeSelected = 0
-  }
-
-  #update() {
-    setTimeout(() => {
-        if (!this.#is_paused) {
-          //TODO: Return list of active sound objects (some how)
-          console.log(`update - ${this.#timeSelected}`)
-          this.#timeSelected++
+        // Cache sound if not already cached
+        if (data[sample.soundId] === undefined) {
+          await this.#cacheSound(sample.soundId)
         }
 
-        this.#update()
-    }, 0)
+        sampleInfo.push(sample)
+      }
+    }
+    
+    return data
+  }
+
+  async #cacheSound(soundId) {
+    const sound = await this.#freeSound.getSound(sample.soundId)
+    // Prefer high quality ogg format if possible
+    this.#sounds[soundId] = sound.previews['preview-hq-ogg'] || sound.previews['preview-hq-mp3']
+  }
+
+  /**
+   * @param {Timeline} timeline
+   */
+  set timeline(timeline) {
+    assert(typeof timeline === Timeline, 'Timeline must be set to a valid timeline object')
+    this.timeline = timeline
+
+    // Clear cache
+    this.#sounds.clear()
   }
 }
 
