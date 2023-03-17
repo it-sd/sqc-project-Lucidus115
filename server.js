@@ -140,7 +140,12 @@ const main = function () {
     .get('/about', function (_req, res) {
       res.render('about')
     })
-    .get('/sound-editor', function (_req, res) {
+    .get('/sound-editor', function (req, res) {
+      const cookie = req.cookies.signedInUser
+      if (cookie === undefined) {
+        res.render('login')
+        return
+      }
       res.render('sound-editor')
     })
     .post('/sound-editor/load/:project', function (req, res) {

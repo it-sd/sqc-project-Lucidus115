@@ -8,6 +8,7 @@
       <input type="text" id="username">
       <label for="password">Password:</label>
       <input type="password" id="password">
+      <span class="error-msg"></span>
       <button type="submit">Submit</button>
     </form>
   </main>
@@ -27,7 +28,10 @@
 
       const result = await res.json()
       if (!result.success) {
-        console.log('AIEEEE. Account does not exist')
+        document.querySelector('span.error-msg').innerHTML = 'Username or password does not exist'
+        for (const input of document.querySelectorAll('form > input')) {
+          input.value = ''
+        }
         return
       }
 

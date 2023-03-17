@@ -204,3 +204,13 @@ footer {
 .dragover {
   background-color: var(--alt-color);
 }
+
+#login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em
+}
+
+#login-form input, #login-form button {
+  height: 2em;
+}
