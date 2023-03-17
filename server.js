@@ -204,7 +204,7 @@ const main = function () {
           const data = await sndEdit.getSoundData(soundId)
           sndEdit.timeline.getLayer(req.body.layerId).insertSample({
             startTime: req.body.startTime,
-            duration: data.duration,
+            duration: data.duration * 1000, // Convert from seconds to milliseconds
             soundId: soundId
           })          
 
