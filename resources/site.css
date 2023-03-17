@@ -136,7 +136,7 @@ footer {
 
 #tl-cursor {
   background-color: var(--text-color);
-  width: 0.1em;
+  opacity: 0.25;
   position: absolute;
 }
 

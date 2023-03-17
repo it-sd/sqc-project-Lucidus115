@@ -43,6 +43,7 @@ const resetCursor = function () {
   const cursor = document.getElementById('tl-cursor')
   cursor.style.minHeight = `${timeline.scrollHeight}px`
   cursor.style.left = `${pxToEm(layerWidth)}em`
+  cursor.style.width = '0.1em'
 }
 
 const searchSound = async function (text) {
@@ -166,10 +167,9 @@ document.addEventListener('layerAdd', async (e) => {
         audioList.push(audio)
         await audio.play()
       }
-      const cursorPos = Number.parseFloat(cursor.style.left.slice(0, -2))
-      const timePos = ((currentTime += step) / 1000)
-      const newPos = (cursorPos + timePos)
-      cursor.style.left = `${newPos}em`
+      // Convert ms into seconds
+      const newCursorWidth = ((currentTime += step) / 1000)
+      cursor.style.width = `${newCursorWidth}em`
     }, step)
   })
 
