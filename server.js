@@ -3,7 +3,7 @@ require('dotenv').config()
 const assert = require('assert')
 const express = require('express')
 const cookieParser = require('cookie-parser')
-const { SoundEditor } = require('./sound-editor')
+const { SoundEditor, Timeline } = require('./sound-editor')
 const path = require('path')
 const PORT = process.env.PORT || 5163
 const { Pool } = require('pg')
@@ -150,7 +150,7 @@ const main = function () {
     })
     .post('/sound-editor/load/:project', function (req, res) {
       //TODO: Use project id to load from database
-
+      sndEdit.timeline = new Timeline()
       const timeline = sndEdit.timeline
       const result = {
         layers: timeline.layers

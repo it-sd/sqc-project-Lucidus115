@@ -118,6 +118,7 @@ class Timeline {
       arr.push({
         color: layer.color,
         name: layer.name,
+        samples: layer.samples,
         id: i
       })
     }
@@ -178,5 +179,6 @@ class Layer {
 }
 
 module.exports = {
-  SoundEditor
+  SoundEditor,
+  Timeline
 }

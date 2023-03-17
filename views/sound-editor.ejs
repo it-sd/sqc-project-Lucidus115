@@ -76,7 +76,12 @@ window.addEventListener('load', async (e) => {
 
   const result = await res.json()
   for (const layer of result.layers) {
-    document.getElementById('layers').appendChild(Schematic.layer(layer))
+    const layerSchem = Schematic.layer(layer)
+
+    // for (const sample of layer.samples) {
+    //   layerSchem.appendChild(sample)
+    // }
+    document.getElementById('layers').appendChild(layerSchem)
   }
 })
 document.addEventListener('layerAdd', async (e) => {
@@ -93,7 +98,7 @@ document.addEventListener('layerAdd', async (e) => {
 
 /*
   Wrap playback code in brackets to limit access
-  to the *cringe* global timer variable
+  to the *cringe* global variables
 */
 {
 
