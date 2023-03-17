@@ -121,10 +121,13 @@ const main = function () {
         // Check if logged in
         const cookie = req.cookies.signedInUser
         if (cookie !== undefined) {
-            // const user = await runFindUserQuery(cookie.username)
+            const user = await runFindUserQuery(cookie.username)
+            const projects = await runGatherProjectsQuery().filter((e) => user.projects.indexOf(e.id) !== -1)
+            
             // const projects = 'todo'
             res.render('account', {
-              username: cookie.username
+              username: user.username,
+              projects: projects
             })
             return
         }
@@ -204,31 +207,40 @@ const main = function () {
         }
         res.send(result)
     })
-    .get('/', async function (_req, res) {
+    .get('/', function (_req, res) {
       res.render('index')
     })
     .get('/about', function (_req, res) {
       res.render('about')
     })
-    .get('/sound-editor', function (req, res) {
+    .get('/sound-editor/:project', async function (req, res) {
       const cookie = req.cookies.signedInUser
       if (cookie === undefined) {
         res.render('login')
         return
       }
-      res.render('sound-editor')
+      // Make sure user owns this project and project id is valid
+      const user = await runFindUserQuery(cookie.username)
+    
+      let projectId = Number.parseInt(req.params.project)
+      if (!Number.isInteger(projectId) && user.projects.indexOf(projectId) === -1) {
+        const projects = await runGatherProjectsQuery()
+        projectId = projects.length + 1
+      }
+      res.render('sound-editor', {
+        projectId: projectId
+      })
     })
     .post('/sound-editor/load/:project', async function (req, res) {
       const projectId = Number.parseInt(req.params.project)
       const projects = await runGatherProjectsQuery()
       const projectData = projects[projectId - 1]
 
-      // Create new project with first available id in case of null data
-      let project = new Project(projects.length)
+      // Create new project object
+      const project = new Project(projectId)
 
       // Initialize project with data
       if (projectData) {
-        project = new Project(projectId)
         project.title = projectData.title
 
         const soundData = JSON.parse(projectData.soundData)
