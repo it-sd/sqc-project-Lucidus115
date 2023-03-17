@@ -145,7 +145,15 @@ class Layer {
     this.#samples = []
   }
 
+  /**
+   * 
+   * @param {SoundSample} sample - The sound sample to be added 
+   */
   insertSample(sample) {
+    //* Until users are allowed to set a samples x position
+    //* set the start time to be after the previous sample finishes 
+    const lastSample = this.#samples[this.#samples.length - 1]
+    sample.startTime += lastSample.duration
     this.#samples.push(sample)
   }
 
