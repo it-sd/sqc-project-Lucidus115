@@ -70,7 +70,7 @@ class SoundEditor {
    * @param {Project} project
    */
   set project (project) {
-    this.project = project
+    this.#project = project
 
     // Clear cache
     this.#sounds.clear()
