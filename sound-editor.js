@@ -153,7 +153,7 @@ class Layer {
     //* Until users are allowed to set a samples x position
     //* set the start time to be after the previous sample finishes 
     const lastSample = this.#samples[this.#samples.length - 1]
-    sample.startTime += lastSample.duration
+    sample.startTime += lastSample ? lastSample.duration : 0
     this.#samples.push(sample)
   }
 
@@ -169,12 +169,6 @@ class Layer {
   moveSample(newLayer, sample) {
     this.removeSample(sample)
     newLayer.insertSample(sample)
-  }
-
-  /** Retrives the sound sample in the layer inside given the time (in milliseconds) */
-  getSample(time) {
-    const soundSample = this.#samples.find(e => e.startTime <= time && (e.startTime + e.duration) >= time)
-    return soundSample
   }
 
   /** Returns an immutable copy of the samples list */

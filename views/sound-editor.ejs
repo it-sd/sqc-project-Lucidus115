@@ -35,18 +35,6 @@ const search = document.getElementById('search-bar')
 
 const timeline = document.getElementById('timeline')
 
-const tickTimeline = function () {
-    setTimeout(() => {
-        // if (!this.#is_paused) {
-        //   //TODO: Return list of active sound objects (some how)
-        //   console.log(`update - ${this.#timeSelected}`)
-        //   this.#timeSelected++
-        // }
-
-        // this.#update()
-    }, 0)
-  }
-
 const searchSound = async function (text) {
   const res = await fetch('/sound-editor/search', {
     method: 'POST',
@@ -102,11 +90,81 @@ document.addEventListener('layerAdd', async (e) => {
 
   document.getElementById('layers').appendChild(Schematic.layer(layer))
 })
-document.addEventListener('timelinePlay', async (e) => {
-  console.log('Bruh')
-})
+
+/*
+  Wrap playback code in brackets to limit access
+  to the *cringe* global timer variable
+*/
+{
+
+  /** Retrives a list of sound samples given the current time (in milliseconds) */
+  const getSamplesToPlay = function (time, samples) {
+    console.assert(samples !== undefined, 'Cannot search an undefined array')
+    if (samples === undefined) {
+      console.error('Cannot search an undefined array')
+      return null
+    }
+    return samples.filter((e) => e.startTime <= time && (e.startTime + e.duration) >= time)
+  }
+
+  let timer
+  let audioList = []
+  document.addEventListener('timelinePlay', async (e) => {
+
+    // Prevent user spam by returning
+    //
+    // Later, this will be where the pause functionality lies
+    if (timer) {
+      return
+    }
+    
+    // Retrieve timeline sample data
+    const res = await fetch('/sound-editor/timeline/retrieveSoundData', {
+      method: 'POST',
+    })
+    const result = await res.json()
+
+    // Current time in ms
+    let currentTime = 0
+    const playedSamples = new Set()
+    timer = setInterval(async function () {
+      const samples = getSamplesToPlay(currentTime, result.soundData.sampleInfo)
+      if (samples === null) {
+        return
+      }
+      for (const sample of samples) {
+
+        // Sample is already playing
+        if (playedSamples.has(sample)) {
+          continue
+        }
+        const soundUrl = result.soundData.sounds[sample.soundId]
+        
+        playedSamples.add(sample)
+        const audio = new Audio(soundUrl)
+        audioList.push(audio)
+        await audio.play()
+      }
+      currentTime++
+    })
+  })
+
+  document.addEventListener('timelineStop', (e) => {
+    if (!timer) {
+      return
+    }
+    clearInterval(timer)
+    timer = null
+
+    for (const audio of audioList) {
+      audio.pause()
+    }
+    audioList = []
+  })
+}
 
 document.getElementById('tl-play').addEventListener('click', (e) => document.dispatchEvent(new Event('timelinePlay')))
+document.getElementById('tl-stop').addEventListener('click', (e) => document.dispatchEvent(new Event('timelineStop')))
 document.getElementById('tl-add-layer').addEventListener('click', (e) => document.dispatchEvent(new Event('layerAdd')))
 
 search.addEventListener('submit', (e) => {
