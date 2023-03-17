@@ -1,37 +1,43 @@
 <%- include('shared/head'); -%>
 <%- include('shared/header'); -%>
   <main>
-    <h2>Sign-In</h2>
+    <h2>Register</h2>
 
     <form id="account-form">
       <label for="username">Username:</label>
       <input type="text" id="username">
       <label for="password">Password:</label>
       <input type="password" id="password">
+      <label for="password-conf">Confirm Password:</label>
+      <input type="password" id="password-conf">
       <span class="error-msg"></span>
       <button type="submit">Submit</button>
     </form>
-    <span>Don't have an account? <a href="/register">Register here</a></span>
+    <span>Have an account? <a href="/account">Login</a></span>
   </main>
   <script>
     const form = document.getElementById('account-form')
     form.addEventListener('submit', async (e) => {
       e.preventDefault()
       const values = form.querySelectorAll('input')
-      const res = await fetch('/login', {
+      const res = await fetch('/register', {
         method: 'POST',
         body: JSON.stringify({
           username: values[0].value,
-          password: values[1].value
+          password: values[1].value,
+          passwordConf: values[2].value
         }),
         headers: { 'Content-Type': 'application/json' }
       })
 
       const result = await res.json()
       if (!result.success) {
-        document.querySelector('span.error-msg').innerHTML = 'Username or password does not exist'
-        for (const input of document.querySelectorAll('form > input')) {
-          input.value = ''
+        document.querySelector('span.error-msg').innerHTML = result.msg
+        const inputs = document.querySelectorAll('form > input')
+
+        // Reset all fields except username
+        for (let i = 1; i < inputs.length; i++) {
+          inputs[i].value = ''
         }
         return
       }

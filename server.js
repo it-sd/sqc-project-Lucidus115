@@ -80,6 +80,12 @@ const runFindUserQuery = async function (username) {
   return user[0]
 }
 
+// Shamelessly stolen from teacher
+const getServerUrl = function (req) {
+  const port = PORT === 80 ? '' : `:${PORT}`
+  return `${req.protocol}://${req.hostname}${port}`
+}
+
 const main = function () {  
   express()
     .use(cookieParser())
@@ -117,6 +123,63 @@ const main = function () {
         }
         res.render('login')
     })
+    .get('/register', function (_req, res) {
+      res.render('register')
+    })
+    .post('/register', async function (req, res) {
+      const emptyOrUndefined = function(str) {
+        return str === undefined || str === ''
+      }
+      const result = {
+        success: false,
+        msg: ''
+      }
+
+      if (emptyOrUndefined(req.body.username)) {
+        result.msg += 'Username must not be empty<br>'
+      }
+      if (emptyOrUndefined(req.body.password)) {
+        result.msg += 'Password must not be empty<br>'
+      }
+      if (req.body.password !== req.body.passwordConf) {
+        result.msg += 'Passwords must match<br>'
+      }
+
+      const user = await runFindUserQuery(req.body.username)
+      if (user !== undefined) {
+        result.msg += 'This username was taken<br>'
+      }
+      // If there is an error message, we can safely assume success is false
+      result.success = result.msg === ''
+
+      if (result.success) {
+        try {
+          const client = await pool.connect()
+          const password = CryptoJS.SHA256(req.body.password).toString()
+  
+          const sql = `INSERT INTO user_account (username, password, email, registered_date)
+            VALUES ($1::VARCHAR(25), $2::TEXT, $3::VARCHAR(254), NOW());`
+          await client.query(sql, [req.body.username, password, 'notareal@email.lol'])
+        } catch (err) {
+          console.error(err)
+          result.success = false
+        }
+        
+        // Log new user in
+        const url = new URL('/login', getServerUrl(req))
+        const resFetch = await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify({
+            username: req.body.username,
+            password: req.body.password
+          }),
+          headers: { 'Content-Type': 'application/json' }
+        })
+        const resultFetch = await resFetch.json()
+        result.success = resultFetch.success
+      }
+      res.send(result)
+    })
     .post('/login', async function (req, res) {
         const password = CryptoJS.SHA256(req.body.password).toString()
         const user = await runFindUserQuery(req.body.username)
@@ -126,7 +189,7 @@ const main = function () {
           res.cookie('signedInUser', {
             username: req.body.username,
             password: password
-          }, { maxAge: 900000 })
+          }, { maxAge: 99999999, httpOnly: true })
         }
 
         const result = {

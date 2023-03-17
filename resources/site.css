@@ -212,7 +212,7 @@ footer {
   background-color: var(--alt-color);
 }
 
-#login-form {
+#account-form {
   display: flex;
   flex-direction: column;
   gap: 1em
