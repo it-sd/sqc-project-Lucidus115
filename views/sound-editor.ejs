@@ -143,9 +143,10 @@ document.addEventListener('layerAdd', async (e) => {
     })
     const result = await res.json()
 
-    // Current time in ms
     const cursor = document.getElementById('tl-cursor')
     const playedSamples = new Set()
+    const step = 10
+    // Current time in ms
     let currentTime = 0
     timer = setInterval(async function () {
       const samples = getSamplesToPlay(currentTime, result.soundData.sampleInfo)
@@ -166,10 +167,10 @@ document.addEventListener('layerAdd', async (e) => {
         await audio.play()
       }
       const cursorPos = Number.parseFloat(cursor.style.left.slice(0, -2))
-      const timePos = (currentTime++ / 1000)
+      const timePos = ((currentTime += step) / 1000)
       const newPos = (cursorPos + timePos)
       cursor.style.left = `${newPos}em`
-    })
+    }, step)
   })
 
   document.addEventListener('timelineStop', (e) => {
