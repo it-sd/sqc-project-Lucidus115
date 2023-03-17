@@ -139,7 +139,6 @@ class Timeline {
         color: layer.color,
         name: layer.name,
         samples: layer.samples,
-        id: i
       })
     }
    
