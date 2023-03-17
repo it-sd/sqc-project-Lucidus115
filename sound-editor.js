@@ -73,7 +73,7 @@ class SoundEditor {
     this.#project = project
 
     // Clear cache
-    this.#sounds.clear()
+    this.#sounds = {}
   }
 
   get project () {
