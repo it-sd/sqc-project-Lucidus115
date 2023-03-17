@@ -3,7 +3,7 @@ require('dotenv').config()
 const assert = require('assert')
 const express = require('express')
 const cookieParser = require('cookie-parser')
-const { SoundEditor, Timeline } = require('./sound-editor')
+const { SoundEditor, Project } = require('./sound-editor')
 const path = require('path')
 const PORT = process.env.PORT || 5163
 const { Pool } = require('pg')
@@ -209,19 +209,30 @@ const main = function () {
         res.render('login')
         return
       }
-      res.render('sound-editor', {
-        title: 'New Project'
-      })
+      res.render('sound-editor')
     })
     .post('/sound-editor/load/:project', function (req, res) {
       //TODO: Use project id to load from database
-      sndEdit.timeline = new Timeline()
-      const timeline = sndEdit.timeline
+      let project = new Project(0)
+      sndEdit.project = project
       const result = {
-        layers: timeline.layers
+        title: project.title,
+        layers: project.timeline.layers
       }
 
       res.send(result)
+    })
+    .post('/sound-editor/save', async function (req, res) {
+      // try {
+      //   const client = await pool.connect()
+      //   const password = CryptoJS.SHA256(req.body.password).toString()
+
+      //   const sql = `INSERT INTO user_account (username, password, email, registered_date)
+      //     VALUES ($1::VARCHAR(25), $2::TEXT, $3::VARCHAR(254), NOW());`
+      //   await client.query(sql, [req.body.username, password, 'notareal@email.lol'])
+      // } catch (err) {
+      //   console.error(err)
+      // }
     })
     .post('/sound-editor/search', async function (req, res) {
       const text = req.body.textSearch
@@ -239,11 +250,11 @@ const main = function () {
       let result = {}
       switch (req.params.action) {
         case 'add':
-          const layer = sndEdit.timeline.addLayer()
+          const layer = sndEdit.project.timeline.addLayer()
           result['addedLayer'] = {
             name: layer.name,
             color: layer.color,
-            id: sndEdit.timeline.numOfLayers - 1
+            id: sndEdit.project.timeline.numOfLayers - 1
           }
           break;
 
@@ -252,7 +263,7 @@ const main = function () {
           if (!Number.isInteger(id)) {
             console.warn('Layer id must be an integer value');
           }
-          result['wasRemoved'] = sndEdit.timeline.removeLayer(id)
+          result['wasRemoved'] = sndEdit.project.timeline.removeLayer(id)
           break;
       
         default:
@@ -267,7 +278,7 @@ const main = function () {
         case 'addSample':
           const soundId = Number.parseInt(req.body.sampleId.split('-')[1])
           const data = await sndEdit.getSoundData(soundId)
-          sndEdit.timeline.getLayer(req.body.layerId).insertSample({
+          sndEdit.project.timeline.getLayer(req.body.layerId).insertSample({
             startTime: req.body.startTime,
             duration: data.duration * 1000, // Convert from seconds to milliseconds
             soundId: soundId

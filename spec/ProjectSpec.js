@@ -46,15 +46,19 @@ describe('sound editor', function () {
 
   describe('addLayer', function () {
     it('should return layer count of 2', function () {
-      sndEdit.timeline.addLayer()
-      expect(sndEdit.timeline.numOfLayers).toBe(2)
+      sndEdit.project.timeline.addLayer()
+      expect(sndEdit.project.timeline.numOfLayers).toBe(2)
     })
   })
 
   describe('requestSoundData', function () {
     const sounds = [678012, 677158, 212195]
-    for (const id of sounds) {
-      sndEdit.timeline.getLayer(0).insertSample(id)
+    for (const soundId of sounds) {
+      sndEdit.project.timeline.getLayer(0).insertSample({
+        startTime: 0,
+        duration: 0,
+        soundId: soundId
+      })
     }
 
     it('should return an object containing the samples and audio previews', async function () {

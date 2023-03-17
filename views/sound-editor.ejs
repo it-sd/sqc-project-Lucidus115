@@ -3,7 +3,7 @@
   <div id="menu-bar">
     <!--TODO Implement [File, Edit, View, Settings, Help]-->
     <div id="project-settings">
-      <span><%= title %></span>
+      <span id="project-title"></span>
     </div>
     <button id="tl-add-layer">Add Layer</button>
     <button id="tl-play">Play</button>
@@ -97,6 +97,7 @@ window.addEventListener('load', async (e) => {
     // }
     document.getElementById('layers').appendChild(layerSchem)
   }
+  document.getElementById('project-title').innerHTML = result.title
   resetCursor()
 })
 document.addEventListener('layerAdd', async (e) => {
@@ -194,6 +195,17 @@ document.addEventListener('layerAdd', async (e) => {
 document.getElementById('tl-play').addEventListener('click', (e) => document.dispatchEvent(new Event('timelinePlay')))
 document.getElementById('tl-stop').addEventListener('click', (e) => document.dispatchEvent(new Event('timelineStop')))
 document.getElementById('tl-add-layer').addEventListener('click', (e) => document.dispatchEvent(new Event('layerAdd')))
+
+// Runs anytime the user reloads or leaves the document
+document.addEventListener('visibilitychange', async (e) => {
+  const res = await fetch('/sound-editor/save', {
+    method: 'POST',
+    // body: JSON.stringify({ textSearch: text }),
+    // headers: { 'Content-Type': 'application/json' }
+  })
+
+  const result = await res.json()
+})
 
 search.addEventListener('submit', (e) => {
   e.preventDefault()

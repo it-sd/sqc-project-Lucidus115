@@ -13,7 +13,7 @@ const defaultColors = [
 class SoundEditor {
   #freeSound
   #sounds
-  timeline
+  project
 
   constructor(freeSoundKey) {
     assert.equal(typeof freeSoundKey, 'string', `Must pass in a string 
@@ -23,7 +23,7 @@ class SoundEditor {
     this.#freeSound.setToken(process.env.FREESOUND_KEY)
 
     this.#sounds = {}
-    this.timeline = new Timeline()
+    this.project = new Project(0)
   }
 
   //TODO: Only show results for those with permissive license
@@ -44,8 +44,8 @@ class SoundEditor {
       sounds: {},
       sampleInfo: []
     }
-    for (let i = 0; i < this.timeline.numOfLayers; i++) {
-      const layer = this.timeline.getLayer(i)
+    for (let i = 0; i < this.project.timeline.numOfLayers; i++) {
+      const layer = this.project.timeline.getLayer(i)
       
       for (const sample of layer.samples) {
 
@@ -68,14 +68,35 @@ class SoundEditor {
   }
 
   /**
-   * @param {Timeline} timeline
+   * @param {Project} project
    */
-  set timeline(timeline) {
-    assert(typeof timeline === Timeline, 'Timeline must be set to a valid timeline object')
-    this.timeline = timeline
+  set project(project) {
+    assert(typeof project === Project, 'Project must be set to a valid project object')
+    this.project = project
 
     // Clear cache
     this.#sounds.clear()
+  }
+}
+
+class Project {
+  title
+  #id
+  #timeline
+
+  constructor(id) {
+    assert(Number.isInteger(id), 'Expected id to be an Integer')
+    this.#id = id
+    this.#timeline = new Timeline()
+    this.title = 'New Project'
+  }
+
+  get timeline() {
+    return this.#timeline
+  }
+
+  get id() {
+    return this.#id
   }
 }
 
@@ -179,5 +200,5 @@ class Layer {
 
 module.exports = {
   SoundEditor,
-  Timeline
+  Project
 }
