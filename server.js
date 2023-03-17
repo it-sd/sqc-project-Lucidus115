@@ -247,7 +247,7 @@ const main = function () {
       const project = new Project(projectId)
 
       // Initialize project with data
-      if (projectData) {
+      if (projectData && JSON.parse(projectData.sound_data).length > 0) {
         console.info('Found project data. Initializing...')
         project.title = projectData.title
 
