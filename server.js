@@ -209,7 +209,9 @@ const main = function () {
         res.render('login')
         return
       }
-      res.render('sound-editor')
+      res.render('sound-editor', {
+        title: 'New Project'
+      })
     })
     .post('/sound-editor/load/:project', function (req, res) {
       //TODO: Use project id to load from database

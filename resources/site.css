@@ -125,6 +125,11 @@ footer {
   display: flex;
 }
 
+#project-settings {
+  font-size: large;
+  padding: 1.5em;
+}
+
 #timeline {
   border: 1px solid var(--text-color);
   height: 24em;
