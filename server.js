@@ -203,12 +203,12 @@ const main = function () {
           const soundId = Number.parseInt(req.body.sampleId.split('-')[1])
           const data = await sndEdit.getSoundData(soundId)
           sndEdit.timeline.getLayer(req.body.layerId).insertSample({
-            startTime: 0, //TODO: Have client specify startTime
+            startTime: req.body.startTime,
             duration: data.duration,
             soundId: soundId
           })          
 
-          result['success'] = `Added sound ${soundId}`
+          result['duration'] = data.duration
           break;
 
         case 'retrieveSoundData':
