@@ -129,8 +129,15 @@ footer {
   border: 1px solid var(--text-color);
   height: 24em;
   overflow: scroll;
+  position: relative;
   user-select: none;
   width: 50em;
+}
+
+#tl-cursor {
+  background-color: var(--text-color);
+  width: 0.1em;
+  position: absolute;
 }
 
 #sound-list {

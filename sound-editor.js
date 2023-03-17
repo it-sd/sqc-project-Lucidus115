@@ -53,7 +53,6 @@ class SoundEditor {
         if (data.sounds[sample.soundId] === undefined) {
           await this.#cacheSound(sample.soundId)
         }
-
         data.sampleInfo.push(sample)
       }
     }

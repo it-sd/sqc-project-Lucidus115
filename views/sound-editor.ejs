@@ -23,8 +23,8 @@
     </section>
 
     <div id="timeline">
-      <div id="layers">
-      </div>
+      <div id="tl-cursor"></div>
+      <div id="layers"></div>
     </div>
   </main>
   <script type="text/javascript" src="sound-elements.js"></script>
@@ -34,6 +34,16 @@ const soundList = document.getElementById('sound-list')
 const search = document.getElementById('search-bar')
 
 const timeline = document.getElementById('timeline')
+
+const pxToEm = function (px) {
+  return px / 16
+}
+const resetCursor = function () {
+  const layerWidth = Number.parseInt(document.getElementsByClassName('tl-layer')[0].offsetWidth)
+  const cursor = document.getElementById('tl-cursor')
+  cursor.style.minHeight = `${timeline.scrollHeight}px`
+  cursor.style.left = `${pxToEm(layerWidth)}em`
+}
 
 const searchSound = async function (text) {
   const res = await fetch('/sound-editor/search', {
@@ -83,8 +93,10 @@ window.addEventListener('load', async (e) => {
     // }
     document.getElementById('layers').appendChild(layerSchem)
   }
+  resetCursor()
 })
 document.addEventListener('layerAdd', async (e) => {
+  document.dispatchEvent(new Event('timelineStop'))
   const res = await fetch('/sound-editor/layer/add', {
     method: 'POST',
   })
@@ -94,6 +106,7 @@ document.addEventListener('layerAdd', async (e) => {
   const layer = result.addedLayer
 
   document.getElementById('layers').appendChild(Schematic.layer(layer))
+  resetCursor()
 })
 
 /*
@@ -115,6 +128,7 @@ document.addEventListener('layerAdd', async (e) => {
   let timer
   let audioList = []
   document.addEventListener('timelinePlay', async (e) => {
+    resetCursor()
 
     // Prevent user spam by returning
     //
@@ -130,8 +144,9 @@ document.addEventListener('layerAdd', async (e) => {
     const result = await res.json()
 
     // Current time in ms
-    let currentTime = 0
+    const cursor = document.getElementById('tl-cursor')
     const playedSamples = new Set()
+    let currentTime = 0
     timer = setInterval(async function () {
       const samples = getSamplesToPlay(currentTime, result.soundData.sampleInfo)
       if (samples === null) {
@@ -150,7 +165,10 @@ document.addEventListener('layerAdd', async (e) => {
         audioList.push(audio)
         await audio.play()
       }
-      currentTime++
+      const cursorPos = Number.parseFloat(cursor.style.left.slice(0, -2))
+      const timePos = (currentTime++ / 1000)
+      const newPos = (cursorPos + timePos)
+      cursor.style.left = `${newPos}em`
     })
   })
 
@@ -165,6 +183,7 @@ document.addEventListener('layerAdd', async (e) => {
       audio.pause()
     }
     audioList = []
+    resetCursor()
   })
 }
 
