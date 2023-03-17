@@ -262,6 +262,11 @@ const main = function () {
             VALUES ($1, NOW(), NOW(), $2, $3);`
           const author = 0
           await client.query(sql, [sndEdit.project.title, JSON.stringify(sndEdit.project.timeline.layers), author])
+        } else {
+          const sql = `UPDATE project
+            SET title = $1, date_modified = NOW(), sound_data = $2
+            WHERE id='${sndEdit.project.id}'`
+          await client.query(sql, [sndEdit.project.title, JSON.stringify(sndEdit.project.timeline.layers)])
         }
         
       } catch (err) {
