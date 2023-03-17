@@ -30,7 +30,7 @@
       <div id="layers"></div>
     </div>
   </main>
-  <script type="text/javascript" src="sound-elements.js"></script>
+  <script type="text/javascript" src="/sound-elements.js"></script>
   <script>
 
 const soundList = document.getElementById('sound-list')
@@ -84,7 +84,7 @@ const displaySounds = function (soundResults) {
 }
 
 window.addEventListener('load', async (e) => {
-  const res = await fetch('/sound-editor/load/0', {
+  const res = await fetch('/sound-editor/load/<%= projectId %>', {
     method: 'POST'
   })
 
@@ -205,6 +205,9 @@ document.addEventListener('visibilitychange', async (e) => {
   })
 
   const result = await res.json()
+  if (!result.success) {
+    console.error('A problem occured while saving the project. Please report the issue at https://github.com/it-sd/sqc-project-Lucidus115/issues')
+  }
 })
 
 search.addEventListener('submit', (e) => {

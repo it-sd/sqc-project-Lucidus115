@@ -122,7 +122,8 @@ const main = function () {
         const cookie = req.cookies.signedInUser
         if (cookie !== undefined) {
             const user = await runFindUserQuery(cookie.username)
-            const projects = await runGatherProjectsQuery().filter((e) => user.projects.indexOf(e.id) !== -1)
+            const query = await runGatherProjectsQuery()
+            const projects = query.filter((e) => user.projects.indexOf(e.id) !== -1)
             
             // const projects = 'todo'
             res.render('account', {
@@ -223,7 +224,7 @@ const main = function () {
       const user = await runFindUserQuery(cookie.username)
     
       let projectId = Number.parseInt(req.params.project)
-      if (!Number.isInteger(projectId) && user.projects.indexOf(projectId) === -1) {
+      if (!Number.isInteger(projectId) || (user.projects !== null && user.projects.indexOf(projectId) === -1)) {
         const projects = await runGatherProjectsQuery()
         projectId = projects.length + 1
       }
@@ -232,6 +233,8 @@ const main = function () {
       })
     })
     .post('/sound-editor/load/:project', async function (req, res) {
+      console.info(`Attempting to load project: ${req.params.project}`)
+
       const projectId = Number.parseInt(req.params.project)
       const projects = await runGatherProjectsQuery()
       const projectData = projects[projectId - 1]
@@ -241,9 +244,10 @@ const main = function () {
 
       // Initialize project with data
       if (projectData) {
+        console.info('Found project data. Initializing...')
         project.title = projectData.title
 
-        const soundData = JSON.parse(projectData.soundData)
+        const soundData = JSON.parse(projectData.sound_data)
         for (const layer of soundData) {
           const tlLayer = project.timeline.addLayer()
           tlLayer.color = layer.color
@@ -263,7 +267,10 @@ const main = function () {
 
       res.send(result)
     })
-    .post('/sound-editor/save', async function (req, res) {
+    .post('/sound-editor/save', async function (_req, res) {
+      const result = {
+        success: true
+      }
       try {
         const client = await pool.connect()
         const projects = await runGatherProjectsQuery()
@@ -283,7 +290,9 @@ const main = function () {
         
       } catch (err) {
         console.error(err)
+        result.success = false
       }
+      res.send(result)
     })
     .post('/sound-editor/search', async function (req, res) {
       const text = req.body.textSearch
