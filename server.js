@@ -123,9 +123,12 @@ const main = function () {
         if (cookie !== undefined) {
             const user = await runFindUserQuery(cookie.username)
             const query = await runGatherProjectsQuery()
-            const projects = query.filter((e) => user.projects.indexOf(e.id) !== -1)
+            let projects = []
+
+            if (user.projects !== null) {
+              projects = query.filter((e) => user.projects.indexOf(e.id) !== -1)
+            }
             
-            // const projects = 'todo'
             res.render('account', {
               username: user.username,
               projects: projects
@@ -267,7 +270,7 @@ const main = function () {
 
       res.send(result)
     })
-    .post('/sound-editor/save', async function (_req, res) {
+    .post('/sound-editor/save', async function (req, res) {
       console.info(`Attempting to save project: ${sndEdit.project.id}`)
       const result = {
         success: true
@@ -277,17 +280,37 @@ const main = function () {
         const projects = await runGatherProjectsQuery()
         
         // Insert if project is undefined
-        if (projects[sndEdit.project.id - 1]) {
+        if (!projects[sndEdit.project.id - 1]) {
+
+          const cookie = req.cookies.signedInUser
+          if (cookie === undefined) {
+            res.render('login')
+            return
+          }
+          // Get logged in user and set as owner
+          const user = await runFindUserQuery(cookie.username)
+
           console.info('Adding data to database...')
           const sql = `INSERT INTO project (title, date_created, date_modified, sound_data, user_id)
             VALUES ($1, NOW(), NOW(), $2, $3);`
-          const author = 0
+          const author = user.id
           await client.query(sql, [sndEdit.project.title, JSON.stringify(sndEdit.project.timeline.layers), author])
+
+          let userProjects = []
+          if (user.projects !== null) {
+            userProjects = user.projects
+          }
+
+          userProjects.push(sndEdit.project.id)
+          const userSql = `UPDATE user_account
+            SET projects='{${userProjects}}'
+            WHERE id='${user.id}';`
+          await client.query(userSql)
         } else {
           console.info('Updating data...')
           const sql = `UPDATE project
             SET title = $1, date_modified = NOW(), sound_data = $2
-            WHERE id='${sndEdit.project.id}'`
+            WHERE id='${sndEdit.project.id}';`
           await client.query(sql, [sndEdit.project.title, JSON.stringify(sndEdit.project.timeline.layers)])
         }
         
