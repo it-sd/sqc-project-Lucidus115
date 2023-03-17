@@ -104,7 +104,7 @@ class Timeline {
   #layers
 
   constructor() {
-    this.#layers = [new Layer(defaultColors[0])]
+    this.#layers = []
   }
 
   addLayer() {
@@ -139,6 +139,7 @@ class Timeline {
         color: layer.color,
         name: layer.name,
         samples: layer.samples,
+        id: i
       })
     }
    

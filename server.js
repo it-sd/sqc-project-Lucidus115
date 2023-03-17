@@ -8,6 +8,7 @@ const path = require('path')
 const PORT = process.env.PORT || 5163
 const { Pool } = require('pg')
 const CryptoJS = require('crypto-js')
+const e = require('express')
 
 const freesoundKey = process.env.FREESOUND_KEY
 const sndEdit = new SoundEditor(freesoundKey)
@@ -260,14 +261,27 @@ const main = function () {
             tlLayer.insertSample(sample)
           }
         }
+      } else {
+        // Add default layer to new projects
+        project.timeline.addLayer()
+      }
+
+      const layers = sndEdit.project.timeline.layers
+      const soundInfo = {}
+
+      for (const layer of layers) {
+        for (const sample of layer.samples) {
+          const sound = await sndEdit.getSoundData(sample.soundId)
+          soundInfo[sample.soundId] = sound.name
+        }
       }
 
       sndEdit.project = project
       const result = {
         title: sndEdit.project.title,
-        layers: sndEdit.project.timeline.layers
+        layers: layers,
+        soundInfo: soundInfo
       }
-
       res.send(result)
     })
     .post('/sound-editor/save', async function (req, res) {

@@ -83,23 +83,6 @@ const displaySounds = function (soundResults) {
   }
 }
 
-window.addEventListener('load', async (e) => {
-  const res = await fetch('/sound-editor/load/<%= projectId %>', {
-    method: 'POST'
-  })
-
-  const result = await res.json()
-  for (const layer of result.layers) {
-    const layerSchem = Schematic.layer(layer)
-
-    // for (const sample of layer.samples) {
-    //   layerSchem.appendChild(sample)
-    // }
-    document.getElementById('layers').appendChild(layerSchem)
-  }
-  document.getElementById('project-title').innerHTML = result.title
-  resetCursor()
-})
 document.addEventListener('layerAdd', async (e) => {
   document.dispatchEvent(new Event('timelineStop'))
   const res = await fetch('/sound-editor/layer/add', {
@@ -196,19 +179,49 @@ document.getElementById('tl-play').addEventListener('click', (e) => document.dis
 document.getElementById('tl-stop').addEventListener('click', (e) => document.dispatchEvent(new Event('timelineStop')))
 document.getElementById('tl-add-layer').addEventListener('click', (e) => document.dispatchEvent(new Event('layerAdd')))
 
-// Runs anytime the user reloads or leaves the document
-document.addEventListener('visibilitychange', async (e) => {
-  const res = await fetch('/sound-editor/save', {
-    method: 'POST',
-    // body: JSON.stringify({ textSearch: text }),
-    // headers: { 'Content-Type': 'application/json' }
+{
+  let isLoaded = false
+  window.addEventListener('load', async (e) => {
+    const res = await fetch('/sound-editor/load/<%= projectId %>', {
+      method: 'POST'
+    })
+
+    const result = await res.json()
+    for (const layer of result.layers) {
+      const layerSchem = Schematic.layer(layer)
+
+      for (const sample of layer.samples) {
+        const node = Schematic.soundSample({
+          id: sample.soundId,
+          name: result.soundInfo[sample.soundId]
+        })
+        node.style.width = `${sample.duration}em`
+        node.style.borderColor = layerSchem.querySelector('div.tl-layer').style.backgroundColor
+        layerSchem.appendChild(node)
+      }
+      document.getElementById('layers').appendChild(layerSchem)
+    }
+    document.getElementById('project-title').innerHTML = result.title
+    resetCursor()
+    isLoaded = true
   })
 
-  const result = await res.json()
-  if (!result.success) {
-    console.error('A problem occured while saving the project. Please report the issue at https://github.com/it-sd/sqc-project-Lucidus115/issues')
-  }
-})
+  // Runs anytime the user reloads or leaves the document
+  document.addEventListener('visibilitychange', async (e) => {
+    // Ensure data is loaded before overwritting saved data
+    if (!isLoaded) {
+      return
+    }
+    const res = await fetch('/sound-editor/save', {
+      method: 'POST',
+    })
+
+    const result = await res.json()
+    if (!result.success) {
+      console.error('A problem occured while saving the project. Please report the issue at https://github.com/it-sd/sqc-project-Lucidus115/issues')
+    }
+  })
+}
 
 search.addEventListener('submit', (e) => {
   e.preventDefault()
