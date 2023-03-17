@@ -57,7 +57,7 @@ describe('sound editor', function () {
       sndEdit.project.timeline.getLayer(0).insertSample({
         startTime: 0,
         duration: 0,
-        soundId: soundId
+        soundId
       })
     }
 

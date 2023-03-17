@@ -8,7 +8,6 @@ const path = require('path')
 const PORT = process.env.PORT || 5163
 const { Pool } = require('pg')
 const CryptoJS = require('crypto-js')
-const e = require('express')
 
 const freesoundKey = process.env.FREESOUND_KEY
 const sndEdit = new SoundEditor(freesoundKey)
@@ -82,7 +81,7 @@ const runFindUserQuery = async function (username) {
 }
 
 const runGatherProjectsQuery = async function () {
-  const sql = `SELECT * FROM project`
+  const sql = 'SELECT * FROM project'
   const results = await query(sql)
 
   return results
@@ -94,7 +93,7 @@ const getServerUrl = function (req) {
   return `${req.protocol}://${req.hostname}${port}`
 }
 
-const main = function () {  
+const main = function () {
   express()
     .use(cookieParser())
     .use(express.static(path.join(__dirname, 'resources')))
@@ -119,30 +118,30 @@ const main = function () {
       res.status(result.status).send(result.msg)
     })
     .get('/account', async function (req, res) {
-        // Check if logged in
-        const cookie = req.cookies.signedInUser
-        if (cookie !== undefined) {
-            const user = await runFindUserQuery(cookie.username)
-            const query = await runGatherProjectsQuery()
-            let projects = []
+      // Check if logged in
+      const cookie = req.cookies.signedInUser
+      if (cookie !== undefined) {
+        const user = await runFindUserQuery(cookie.username)
+        const query = await runGatherProjectsQuery()
+        let projects = []
 
-            if (user.projects !== null) {
-              projects = query.filter((e) => user.projects.indexOf(e.id) !== -1)
-            }
-            
-            res.render('account', {
-              username: user.username,
-              projects: projects
-            })
-            return
+        if (user.projects !== null) {
+          projects = query.filter((e) => user.projects.indexOf(e.id) !== -1)
         }
-        res.render('login')
+
+        res.render('account', {
+          username: user.username,
+          projects
+        })
+        return
+      }
+      res.render('login')
     })
     .get('/register', function (_req, res) {
       res.render('register')
     })
     .post('/register', async function (req, res) {
-      const emptyOrUndefined = function(str) {
+      const emptyOrUndefined = function (str) {
         return str === undefined || str === ''
       }
       const result = {
@@ -171,7 +170,7 @@ const main = function () {
         try {
           const client = await pool.connect()
           const password = CryptoJS.SHA256(req.body.password).toString()
-  
+
           const sql = `INSERT INTO user_account (username, password, email, registered_date)
             VALUES ($1::VARCHAR(25), $2::TEXT, $3::VARCHAR(254), NOW());`
           await client.query(sql, [req.body.username, password, 'notareal@email.lol'])
@@ -179,7 +178,7 @@ const main = function () {
           console.error(err)
           result.success = false
         }
-        
+
         // Log new user in
         const url = new URL('/login', getServerUrl(req))
         const resFetch = await fetch(url, {
@@ -196,21 +195,21 @@ const main = function () {
       res.send(result)
     })
     .post('/login', async function (req, res) {
-        const password = CryptoJS.SHA256(req.body.password).toString()
-        const user = await runFindUserQuery(req.body.username)
-        const success = user !== undefined && password === user.password
+      const password = CryptoJS.SHA256(req.body.password).toString()
+      const user = await runFindUserQuery(req.body.username)
+      const success = user !== undefined && password === user.password
 
-        if (success) {
-          res.cookie('signedInUser', {
-            username: req.body.username,
-            password: password
-          }, { maxAge: 99999999, httpOnly: true })
-        }
+      if (success) {
+        res.cookie('signedInUser', {
+          username: req.body.username,
+          password
+        }, { maxAge: 99999999, httpOnly: true })
+      }
 
-        const result = {
-          success: success
-        }
-        res.send(result)
+      const result = {
+        success
+      }
+      res.send(result)
     })
     .get('/', function (_req, res) {
       res.render('index')
@@ -226,14 +225,14 @@ const main = function () {
       }
       // Make sure user owns this project and project id is valid
       const user = await runFindUserQuery(cookie.username)
-    
+
       let projectId = Number.parseInt(req.params.project)
       if (!Number.isInteger(projectId) || (user.projects !== null && user.projects.indexOf(projectId) === -1)) {
         const projects = await runGatherProjectsQuery()
         projectId = projects.length + 1
       }
       res.render('sound-editor', {
-        projectId: projectId
+        projectId
       })
     })
     .post('/sound-editor/load/:project', async function (req, res) {
@@ -256,7 +255,7 @@ const main = function () {
           const tlLayer = project.timeline.addLayer()
           tlLayer.color = layer.color
           tlLayer.name = layer.name
-          
+
           for (const sample of layer.samples) {
             tlLayer.insertSample(sample)
           }
@@ -279,8 +278,8 @@ const main = function () {
       sndEdit.project = project
       const result = {
         title: sndEdit.project.title,
-        layers: layers,
-        soundInfo: soundInfo
+        layers,
+        soundInfo
       }
       res.send(result)
     })
@@ -292,10 +291,9 @@ const main = function () {
       try {
         const client = await pool.connect()
         const projects = await runGatherProjectsQuery()
-        
+
         // Insert if project is undefined
         if (!projects[sndEdit.project.id - 1]) {
-
           const cookie = req.cookies.signedInUser
           if (cookie === undefined) {
             res.render('login')
@@ -327,7 +325,6 @@ const main = function () {
             WHERE id='${sndEdit.project.id}';`
           await client.query(sql, [sndEdit.project.title, JSON.stringify(sndEdit.project.timeline.layers)])
         }
-        
       } catch (err) {
         console.error(err)
         result.success = false
@@ -343,57 +340,59 @@ const main = function () {
       const soundResults = await sndEdit.searchSounds(text)
 
       const result = {
-        soundResults: soundResults
+        soundResults
       }
 
       res.send(result)
     })
     .post('/sound-editor/layer/:action', function (req, res) {
-      let result = {}
+      const result = {}
+      const layer = sndEdit.project.timeline.addLayer()
+      const id = Number.parseInt(req.params.action.split(':')[1])
+
       switch (req.params.action) {
         case 'add':
-          const layer = sndEdit.project.timeline.addLayer()
-          result['addedLayer'] = {
+          result.addedLayer = {
             name: layer.name,
             color: layer.color,
             id: sndEdit.project.timeline.numOfLayers - 1
           }
-          break;
+          break
 
         case 'remove/:id':
-          const id = Number.parseInt(req.params.action.split(':')[1])
           if (!Number.isInteger(id)) {
-            console.warn('Layer id must be an integer value');
+            console.warn('Layer id must be an integer value')
           }
-          result['wasRemoved'] = sndEdit.project.timeline.removeLayer(id)
-          break;
-      
+          result.wasRemoved = sndEdit.project.timeline.removeLayer(id)
+          break
+
         default:
-          break;
+          break
       }
 
       res.send(result)
     })
     .post('/sound-editor/timeline/:action', async function (req, res) {
-      let result = {}
+      const result = {}
+      const soundId = Number.parseInt(req.body.sampleId.split('-')[1])
+      const data = await sndEdit.getSoundData(soundId)
       switch (req.params.action) {
         case 'addSample':
-          const soundId = Number.parseInt(req.body.sampleId.split('-')[1])
-          const data = await sndEdit.getSoundData(soundId)
           sndEdit.project.timeline.getLayer(req.body.layerId).insertSample({
             startTime: req.body.startTime,
             duration: data.duration * 1000, // Convert from seconds to milliseconds
-            soundId: soundId
-          })          
+            soundId
+          })
 
-          result['duration'] = data.duration
-          break;
+          result.duration = data.duration
+          break
 
         case 'retrieveSoundData':
-          result['soundData'] = await sndEdit.retrieveSoundData()
-      
+          result.soundData = await sndEdit.retrieveSoundData()
+          break
+
         default:
-          break;
+          break
       }
 
       res.send(result)

@@ -26,18 +26,18 @@ const Schematic = {
       e.preventDefault()
     },
     false)
-    
+
     samples.addEventListener('drop', (e) => {
       samples.classList.remove('dragover')
-    
+
       if (!dragged.classList.contains('sound-sample')) {
         return
       }
-    
+
       const layerId = samples.parentElement.id.split('-')[1]
-      div.dispatchEvent(new CustomEvent('sampleAdd', { detail: { xPos: e.x, layerId: layerId } }))
+      div.dispatchEvent(new CustomEvent('sampleAdd', { detail: { xPos: e.x, layerId } }))
     })
-    
+
     /** Visual indicators for if an item is droppable onto the target */
     samples.addEventListener('dragenter', (e) => {
       samples.classList.add('dragover')
@@ -49,19 +49,19 @@ const Schematic = {
     div.addEventListener('sampleAdd', async (e) => {
       const res = await fetch('/sound-editor/timeline/addSample', {
         method: 'POST',
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           startTime: 0,
           layerId: e.detail.layerId,
           sampleId: dragged.id
         }),
         headers: { 'Content-Type': 'application/json' }
       })
-    
+
       const result = await res.json()
-    
-      //TODO: Only append if result is valid position
+
+      // TODO: Only append if result is valid position
       const node = dragged.cloneNode(true)
-      //node.style.marginLeft = `${e.detail.xPos}px`
+      // node.style.marginLeft = `${e.detail.xPos}px`
       node.style.width = `${result.duration}em`
       node.style.borderColor = div.querySelector('div.tl-layer').style.backgroundColor
       e.target.querySelector('div.tl-samples').appendChild(node)
@@ -81,7 +81,7 @@ const Schematic = {
 
     const title = document.createElement('span')
     title.appendChild(document.createTextNode(soundData.name))
-    
+
     div.appendChild(title)
     div.title = title.textContent
 
