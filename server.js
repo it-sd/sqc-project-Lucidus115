@@ -268,6 +268,7 @@ const main = function () {
       res.send(result)
     })
     .post('/sound-editor/save', async function (_req, res) {
+      console.info(`Attempting to save project: ${sndEdit.project.id}`)
       const result = {
         success: true
       }
@@ -277,11 +278,13 @@ const main = function () {
         
         // Insert if project is undefined
         if (projects[sndEdit.project.id - 1]) {
+          console.info('Adding data to database...')
           const sql = `INSERT INTO project (title, date_created, date_modified, sound_data, user_id)
             VALUES ($1, NOW(), NOW(), $2, $3);`
           const author = 0
           await client.query(sql, [sndEdit.project.title, JSON.stringify(sndEdit.project.timeline.layers), author])
         } else {
+          console.info('Updating data...')
           const sql = `UPDATE project
             SET title = $1, date_modified = NOW(), sound_data = $2
             WHERE id='${sndEdit.project.id}'`
@@ -292,6 +295,8 @@ const main = function () {
         console.error(err)
         result.success = false
       }
+
+      console.info('Finished!')
       res.send(result)
     })
     .post('/sound-editor/search', async function (req, res) {
